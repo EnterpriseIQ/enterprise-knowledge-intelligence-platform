@@ -1,0 +1,31 @@
+# Version control / CI
+.git
+.github
+.gitignore
+
+# Python caches & build artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Regenerable runtime artifacts (re-created in the image / at runtime)
+data/vectorstore/
+data/logs/audit_trail.jsonl
+
+# Local env & editor files
+.env
+.DS_Store
+.idea/
+.vscode/
+
+# Docs not needed at runtime (kept small image; optional to include)
+*.md
+docs/
+diagrams/

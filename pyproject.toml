@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "enterprise-rag-platform"
+version = "1.0.0"
+description = "Secure Enterprise RAG Intelligence Platform: hybrid retrieval across heterogeneous enterprise sources with strict RBAC, grounded citations and confidence scoring."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Enterprise RAG Challenge Submission" }]
+keywords = ["rag", "retrieval-augmented-generation", "rbac", "enterprise", "fastapi", "chromadb"]
+
+dependencies = [
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.27",
+    "pydantic>=2.6",
+    "chromadb>=0.4.24",
+    "sentence-transformers>=2.6",
+    "rank-bm25>=0.2.2",
+    "numpy>=1.26",
+    "pandas>=2.1",
+    "pypdf>=4.0",
+    "reportlab>=4.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "httpx>=0.27",
+    "ruff>=0.4",
+]
+# Optional: enables the Anthropic LLM answer backend (ERAG_LLM=1 + ANTHROPIC_API_KEY).
+# The platform runs fully without this — the default extractive backend needs no key.
+llm = [
+    "anthropic>=0.40",
+]
+
+[project.scripts]
+# Console entry point: `enterprise-rag --role HR --query "..."`
+enterprise-rag = "src.cli:main"
+
+[project.urls]
+Documentation = "./README.md"
+
+[tool.setuptools]
+packages = ["src"]
+
+[tool.setuptools.package-dir]
+src = "src"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP", "B"]
+ignore = ["E501"]  # long lines are tolerated in prose-heavy generators/docstrings
