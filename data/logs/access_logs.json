@@ -1,0 +1,50 @@
+[
+  {
+    "ts": "2025-05-20T08:00:00",
+    "user": "hr_bob",
+    "action": "read",
+    "resource": "hr_leave_policy.pdf",
+    "result": "allow",
+    "ip": "10.0.4.21"
+  },
+  {
+    "ts": "2025-05-20T08:07:00",
+    "user": "fin_carol",
+    "action": "read",
+    "resource": "fin_budget_report_2025.pdf",
+    "result": "allow",
+    "ip": "10.0.5.34"
+  },
+  {
+    "ts": "2025-05-20T08:14:00",
+    "user": "eng_dave",
+    "action": "read",
+    "resource": "eng_deployment_guide.pdf",
+    "result": "allow",
+    "ip": "10.0.6.12"
+  },
+  {
+    "ts": "2025-05-20T08:21:00",
+    "user": "eng_dave",
+    "action": "read",
+    "resource": "fin_budget_report_2025.pdf",
+    "result": "deny",
+    "ip": "10.0.6.12"
+  },
+  {
+    "ts": "2025-05-20T08:28:00",
+    "user": "hr_bob",
+    "action": "read",
+    "resource": "fin_expense_report_q1.pdf",
+    "result": "deny",
+    "ip": "10.0.4.21"
+  },
+  {
+    "ts": "2025-05-20T08:35:00",
+    "user": "comp_erin",
+    "action": "read",
+    "resource": "comp_audit_report_2025.pdf",
+    "result": "allow",
+    "ip": "10.0.7.5"
+  }
+]

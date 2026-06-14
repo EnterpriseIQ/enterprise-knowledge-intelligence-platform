@@ -1,0 +1,49 @@
+flowchart TB
+    subgraph Sources["Enterprise Data Sources"]
+        PDF["PDFs & Reports<br/>(HR, Eng, Finance, Compliance)"]
+        CSV["CSV Datasets<br/>(Operations metrics)"]
+        SQL["SQL Database<br/>(servers, tickets)"]
+        JSON["JSON Logs<br/>(audit, access, security)"]
+    end
+
+    subgraph Ingest["1. Ingestion & Processing (offline)"]
+        LOAD["Source Loaders<br/>pdf / csv / sql / json"]
+        MANIFEST["Manifest<br/>department · sensitivity · ACL"]
+        CHUNK["Chunking Layer<br/>sentence-aware + overlap + page tags"]
+        EMB["Embedding Layer<br/>SentenceTransformers<br/>(hashing fallback)"]
+    end
+
+    subgraph Store["2. Index"]
+        VEC[("ChromaDB Vector Store<br/>text + embedding + security metadata")]
+        BM25["BM25 Sparse Index"]
+    end
+
+    subgraph Query["3. Query-time Pipeline"]
+        ROUTER["Query Router<br/>intent + department routing"]
+        HYBRID["Hybrid Retrieval Engine<br/>dense ⊕ sparse fusion"]
+        RBAC{{"RBAC Authorization Engine<br/>department · clearance · ACL"}}
+        XSRC["Cross-Source Diversifier"]
+        CITE["Citation Engine"]
+        CONF["Confidence Scoring"]
+        GEN["Grounded Answer Generator<br/>extractive · cited · no hallucination"]
+    end
+
+    subgraph Surface["4. Interfaces"]
+        API["FastAPI<br/>/query /roles /health /audit"]
+        CLI["CLI / run_demo.py"]
+    end
+
+    AUDIT[("Audit Trail<br/>JSONL")]
+
+    PDF & CSV & SQL & JSON --> LOAD --> CHUNK --> EMB
+    MANIFEST -. security metadata .-> CHUNK
+    EMB --> VEC
+    CHUNK --> BM25
+
+    USER(["User + Role"]) --> API & CLI --> ROUTER --> HYBRID
+    HYBRID <--> VEC
+    HYBRID <--> BM25
+    HYBRID --> RBAC
+    RBAC -- authorised only --> XSRC --> CITE --> CONF --> GEN --> API & CLI
+    RBAC -- every decision --> AUDIT
+    ROUTER -. boost .-> HYBRID

@@ -1,0 +1,30 @@
+[
+  {
+    "ts": "2025-05-20T08:00:00",
+    "actor": "admin_alice",
+    "action": "grant_role",
+    "target": "eng_dave:Engineering",
+    "outcome": "success"
+  },
+  {
+    "ts": "2025-05-20T10:00:00",
+    "actor": "comp_erin",
+    "action": "open_audit",
+    "target": "access-recertification-Q2",
+    "outcome": "success"
+  },
+  {
+    "ts": "2025-05-20T12:00:00",
+    "actor": "admin_alice",
+    "action": "rotate_key",
+    "target": "storage-service-kms",
+    "outcome": "success"
+  },
+  {
+    "ts": "2025-05-20T14:00:00",
+    "actor": "comp_erin",
+    "action": "review_finding",
+    "target": "R-2025-07",
+    "outcome": "in_progress"
+  }
+]

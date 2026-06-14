@@ -1,0 +1,182 @@
+[
+  {
+    "doc_id": "hr-handbook",
+    "title": "Employee Handbook 2025",
+    "path": "data/documents/hr_employee_handbook.pdf",
+    "source_type": "pdf",
+    "department": "HR",
+    "sensitivity": "internal",
+    "allowed_roles": []
+  },
+  {
+    "doc_id": "hr-leave",
+    "title": "Leave Policy",
+    "path": "data/documents/hr_leave_policy.pdf",
+    "source_type": "pdf",
+    "department": "HR",
+    "sensitivity": "internal",
+    "allowed_roles": []
+  },
+  {
+    "doc_id": "hr-remote",
+    "title": "Remote Work Policy",
+    "path": "data/documents/hr_remote_work_policy.pdf",
+    "source_type": "pdf",
+    "department": "HR",
+    "sensitivity": "internal",
+    "allowed_roles": []
+  },
+  {
+    "doc_id": "hr-hiring",
+    "title": "Hiring Guidelines",
+    "path": "data/documents/hr_hiring_guidelines.pdf",
+    "source_type": "pdf",
+    "department": "HR",
+    "sensitivity": "confidential",
+    "allowed_roles": []
+  },
+  {
+    "doc_id": "eng-arch",
+    "title": "Architecture Standards",
+    "path": "data/documents/eng_architecture_standards.pdf",
+    "source_type": "pdf",
+    "department": "Engineering",
+    "sensitivity": "internal",
+    "allowed_roles": []
+  },
+  {
+    "doc_id": "eng-deploy",
+    "title": "Deployment Guide",
+    "path": "data/documents/eng_deployment_guide.pdf",
+    "source_type": "pdf",
+    "department": "Engineering",
+    "sensitivity": "internal",
+    "allowed_roles": []
+  },
+  {
+    "doc_id": "eng-incidents",
+    "title": "Incident Reports",
+    "path": "data/documents/eng_incident_reports.pdf",
+    "source_type": "pdf",
+    "department": "Engineering",
+    "sensitivity": "confidential",
+    "allowed_roles": []
+  },
+  {
+    "doc_id": "eng-platform",
+    "title": "Platform Documentation",
+    "path": "data/documents/eng_platform_documentation.pdf",
+    "source_type": "pdf",
+    "department": "Engineering",
+    "sensitivity": "internal",
+    "allowed_roles": []
+  },
+  {
+    "doc_id": "fin-budget",
+    "title": "Budget Report 2025",
+    "path": "data/documents/fin_budget_report_2025.pdf",
+    "source_type": "pdf",
+    "department": "Finance",
+    "sensitivity": "confidential",
+    "allowed_roles": []
+  },
+  {
+    "doc_id": "fin-expense",
+    "title": "Expense Report Q1",
+    "path": "data/documents/fin_expense_report_q1.pdf",
+    "source_type": "pdf",
+    "department": "Finance",
+    "sensitivity": "confidential",
+    "allowed_roles": []
+  },
+  {
+    "doc_id": "fin-forecast",
+    "title": "Department Forecast",
+    "path": "data/documents/fin_department_forecast.pdf",
+    "source_type": "pdf",
+    "department": "Finance",
+    "sensitivity": "confidential",
+    "allowed_roles": []
+  },
+  {
+    "doc_id": "comp-gdpr",
+    "title": "GDPR Policy",
+    "path": "data/documents/comp_gdpr_policy.pdf",
+    "source_type": "pdf",
+    "department": "Compliance",
+    "sensitivity": "internal",
+    "allowed_roles": []
+  },
+  {
+    "doc_id": "comp-security",
+    "title": "Security Policy",
+    "path": "data/documents/comp_security_policy.pdf",
+    "source_type": "pdf",
+    "department": "Compliance",
+    "sensitivity": "confidential",
+    "allowed_roles": []
+  },
+  {
+    "doc_id": "comp-audit",
+    "title": "Audit Report 2025",
+    "path": "data/documents/comp_audit_report_2025.pdf",
+    "source_type": "pdf",
+    "department": "Compliance",
+    "sensitivity": "restricted",
+    "allowed_roles": []
+  },
+  {
+    "doc_id": "comp-regulatory",
+    "title": "Regulatory Findings",
+    "path": "data/documents/comp_regulatory_findings.pdf",
+    "source_type": "pdf",
+    "department": "Compliance",
+    "sensitivity": "restricted",
+    "allowed_roles": []
+  },
+  {
+    "doc_id": "ops-metrics",
+    "title": "Operational Metrics (CSV)",
+    "path": "data/structured/operations_metrics.csv",
+    "source_type": "csv",
+    "department": "Operations",
+    "sensitivity": "internal",
+    "allowed_roles": []
+  },
+  {
+    "doc_id": "ops-sql",
+    "title": "Operations Database (SQL: servers, tickets)",
+    "path": "data/structured/operations.db",
+    "source_type": "sql",
+    "department": "Operations",
+    "sensitivity": "confidential",
+    "allowed_roles": []
+  },
+  {
+    "doc_id": "log-access",
+    "title": "Access Logs",
+    "path": "data/logs/access_logs.json",
+    "source_type": "json",
+    "department": "Operations",
+    "sensitivity": "confidential",
+    "allowed_roles": []
+  },
+  {
+    "doc_id": "log-security",
+    "title": "Security Events",
+    "path": "data/logs/security_events.json",
+    "source_type": "json",
+    "department": "Compliance",
+    "sensitivity": "restricted",
+    "allowed_roles": []
+  },
+  {
+    "doc_id": "log-audit",
+    "title": "Audit Trail Logs",
+    "path": "data/logs/audit_logs.json",
+    "source_type": "json",
+    "department": "Compliance",
+    "sensitivity": "restricted",
+    "allowed_roles": []
+  }
+]

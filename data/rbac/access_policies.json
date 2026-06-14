@@ -1,0 +1,44 @@
+{
+  "_comment": "Authoritative RBAC policy for the Enterprise RAG platform. Access is granted only when ALL conditions hold: (1) the document department is in the role's allowed departments (or the role is a wildcard), (2) the document sensitivity is at or below the role's clearance, and (3) if a document declares explicit allowed_roles, the user's role is listed (Admin bypasses this). Compliance has cross-department READ access for audit purposes, mirroring a real enterprise GRC function.",
+  "sensitivity_levels": ["public", "internal", "confidential", "restricted"],
+  "roles": {
+    "Admin": {
+      "departments": ["*"],
+      "clearance": "restricted",
+      "description": "Platform administrator with full cross-department, all-sensitivity access."
+    },
+    "HR": {
+      "departments": ["HR"],
+      "clearance": "confidential",
+      "description": "Human Resources. Owns employee, leave, hiring and handbook content."
+    },
+    "Finance": {
+      "departments": ["Finance"],
+      "clearance": "confidential",
+      "description": "Finance department. Budgets, forecasts and expense reporting."
+    },
+    "Engineering": {
+      "departments": ["Engineering", "Operations"],
+      "clearance": "confidential",
+      "description": "Engineering owns platform/architecture docs and operational datasets."
+    },
+    "Compliance": {
+      "departments": ["Compliance", "HR", "Finance", "Engineering", "Operations"],
+      "clearance": "restricted",
+      "description": "Governance, Risk & Compliance. Cross-department read access for audit, but cannot exceed restricted clearance."
+    }
+  },
+  "users": {
+    "admin_alice":  {"role": "Admin",       "display_name": "Alice (Platform Admin)"},
+    "hr_bob":       {"role": "HR",           "display_name": "Bob (HR Manager)"},
+    "fin_carol":    {"role": "Finance",      "display_name": "Carol (Finance Analyst)"},
+    "eng_dave":     {"role": "Engineering",  "display_name": "Dave (Staff Engineer)"},
+    "comp_erin":    {"role": "Compliance",   "display_name": "Erin (Compliance Officer)"}
+  },
+  "demo_expectations": [
+    {"role": "HR",          "can_access": "HR",          "denied": "Finance"},
+    {"role": "Finance",     "can_access": "Finance",     "denied": "HR"},
+    {"role": "Engineering", "can_access": "Engineering", "denied": "Finance"},
+    {"role": "Compliance",  "can_access": "Compliance",  "denied": "none (cross-department read)"}
+  ]
+}

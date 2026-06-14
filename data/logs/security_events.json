@@ -1,0 +1,30 @@
+[
+  {
+    "ts": "2025-05-20T08:00:00",
+    "event_id": "SEC-1000",
+    "severity": "low",
+    "category": "auth",
+    "description": "5 failed login attempts for user fin_carol from a new device, then success with MFA."
+  },
+  {
+    "ts": "2025-05-20T09:00:00",
+    "event_id": "SEC-1001",
+    "severity": "medium",
+    "category": "access",
+    "description": "User eng_dave attempted to access a Finance document and was denied by RBAC."
+  },
+  {
+    "ts": "2025-05-20T10:00:00",
+    "event_id": "SEC-1002",
+    "severity": "high",
+    "category": "exfiltration",
+    "description": "Anomalous bulk export attempt blocked: 4,200 records requested outside business hours."
+  },
+  {
+    "ts": "2025-05-20T11:00:00",
+    "event_id": "SEC-1003",
+    "severity": "low",
+    "category": "config",
+    "description": "TLS certificate for api-gateway renewed automatically 14 days before expiry."
+  }
+]
