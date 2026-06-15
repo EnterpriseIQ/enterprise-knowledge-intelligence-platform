@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  knowledge-api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - ERAG_LLM=1
+      - ERAG_LLM_PROVIDER=ollama
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - ERAG_RERANKER=0
+    depends_on:
+      - prometheus
+      - ollama
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+volumes:
+  ollama_data:

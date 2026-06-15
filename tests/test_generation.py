@@ -49,35 +49,27 @@ def test_llm_enabled_without_key_falls_back_to_extractive(monkeypatch):
 
 
 def test_llm_path_parses_response_and_failure_falls_back():
-    """Drive the LLM code path with a stub client (no network)."""
+    """Drive the LLM code path with a stub provider."""
     gen = GroundedAnswerGenerator()
 
-    class _Block:
-        type = "text"
-        text = "Employees may work remotely three days per week [1]."
+    class StubProvider:
+        @property
+        def name(self):
+            return "stub:test"
 
-    class _Resp:
-        content = [_Block()]
+        def is_available(self):
+            return True
 
-    class _OKClient:
-        class messages:
-            @staticmethod
-            def create(**kwargs):
-                # The model must receive context-only grounding input.
-                assert "Context passages" in kwargs["messages"][0]["content"]
-                return _Resp()
+        def generate(self, query, chunks, system_prompt):
+            if "fail" in query:
+                return None
+            return "Employees may work remotely three days per week [1]."
 
-    gen._client = _OKClient()
-    gen.backend = "anthropic:test"
+    gen.provider = StubProvider()
+    gen.backend = gen.provider.name
+
     out = gen.generate("remote work policy", _chunks(), HIGH)
     assert out.startswith("Employees may work remotely") and "[1]" in out
 
-    class _BadClient:
-        class messages:
-            @staticmethod
-            def create(**kwargs):
-                raise RuntimeError("api down")
-
-    gen._client = _BadClient()
-    fallback = gen.generate("What is the remote work policy?", _chunks(), HIGH)
+    fallback = gen.generate("fail and fallback", _chunks(), HIGH)
     assert "[1]" in fallback  # gracefully fell back to extractive

@@ -34,17 +34,21 @@ provider-independent, so swapping the generator changes nothing else.
 from __future__ import annotations
 
 import os
-import re
 
-from src.generation.confidence import _terms
 from src.retrieval.hybrid_retriever import RetrievedChunk
+from src.generation.providers import (
+    GenerationProvider,
+    ExtractiveProvider,
+    AnthropicProvider,
+    OpenAIProvider,
+    GeminiProvider,
+    OllamaProvider,
+)
 
-_SENT_SPLIT = re.compile(r"(?<=[.!?])\s+")
 _REFUSAL = ("I could not find sufficient authorised evidence to answer this "
             "question confidently. Please refine the question or check that you "
             "have access to the relevant documents.")
 
-_LLM_MODEL = os.getenv("ERAG_LLM_MODEL", "claude-opus-4-8")
 _SYSTEM_PROMPT = (
     "You are an enterprise knowledge assistant. Answer the user's question using "
     "ONLY the numbered context passages provided. Every claim must be grounded in a "
@@ -56,22 +60,30 @@ _SYSTEM_PROMPT = (
 
 class GroundedAnswerGenerator:
     def __init__(self):
-        self.backend = "extractive"
-        self._client = None
+        self.extractive = ExtractiveProvider()
+        self.provider: GenerationProvider = self.extractive
+        self.backend = self.extractive.name
+
         if os.getenv("ERAG_LLM") == "1":
-            self._try_init_anthropic()
+            self._try_init_llm_provider()
 
-    def _try_init_anthropic(self) -> None:
-        """Initialise the optional Anthropic backend; stay extractive on any failure."""
-        try:
-            import anthropic
+    def _try_init_llm_provider(self) -> None:
+        """Initialise the optional LLM backend; stay extractive on any failure."""
+        provider_name = os.getenv("ERAG_LLM_PROVIDER", "anthropic").lower()
 
-            if not os.getenv("ANTHROPIC_API_KEY"):
-                return  # no key -> remain extractive
-            self._client = anthropic.Anthropic()
-            self.backend = f"anthropic:{_LLM_MODEL}"
-        except Exception:
-            self._client = None  # SDK missing -> remain extractive
+        provider = None
+        if provider_name == "anthropic":
+            provider = AnthropicProvider()
+        elif provider_name == "openai":
+            provider = OpenAIProvider()
+        elif provider_name == "gemini":
+            provider = GeminiProvider()
+        elif provider_name == "ollama":
+            provider = OllamaProvider()
+
+        if provider and getattr(provider, 'is_available', lambda: True)():
+            self.provider = provider
+            self.backend = provider.name
 
     # ------------------------------------------------------------------ #
     def generate(self, query: str, chunks: list[RetrievedChunk],
@@ -81,64 +93,19 @@ class GroundedAnswerGenerator:
         if not chunks or confidence.get("label") in ("none", "low"):
             return _REFUSAL
 
-        if self._client is not None:
-            answer = self._generate_llm(query, chunks)
-            if answer is not None:
-                return self._annotate(answer, confidence)
+        # Only pass max_sentences to the extractive provider if it's the active one
+        if isinstance(self.provider, ExtractiveProvider):
+            self.provider.max_sentences = max_sentences
 
-        return self._annotate(self._generate_extractive(query, chunks, max_sentences),
-                              confidence)
+        answer = None
+        if self.provider.name != "extractive":
+            answer = self.provider.generate(query, chunks, _SYSTEM_PROMPT)
 
-    # ------------------------------------------------------------------ #
-    def _generate_extractive(self, query: str, chunks: list[RetrievedChunk],
-                             max_sentences: int) -> str:
-        q_terms = _terms(query)
-        scored: list[tuple[float, int, str]] = []  # (relevance, citation_marker, sentence)
-        for marker, chunk in enumerate(chunks, start=1):
-            for sent in _SENT_SPLIT.split(chunk.text):
-                sent = sent.strip()
-                if len(sent) < 25:
-                    continue
-                overlap = len(q_terms & _terms(sent))
-                rel = overlap + chunk.fused_score
-                if overlap > 0 or marker == 1:
-                    scored.append((rel, marker, sent))
+        if answer is None:
+            self.extractive.max_sentences = max_sentences
+            answer = self.extractive.generate(query, chunks, _SYSTEM_PROMPT)
 
-        scored.sort(key=lambda x: x[0], reverse=True)
-        chosen = scored[:max_sentences]
-        if not chosen:
-            return _REFUSAL
-
-        chosen.sort(key=lambda x: x[1])  # readable order by citation marker
-        seen, parts = set(), []
-        for _, marker, sent in chosen:
-            key = sent[:60]
-            if key in seen:
-                continue
-            seen.add(key)
-            parts.append(sent.rstrip(".") + f". [{marker}]")
-        return " ".join(parts)
-
-    # ------------------------------------------------------------------ #
-    def _generate_llm(self, query: str, chunks: list[RetrievedChunk]) -> str | None:
-        """Call Anthropic with context-only grounding. Returns None on any failure
-        so the caller falls back to the extractive backend."""
-        context = "\n\n".join(
-            f"[{i}] (source: {c.metadata.get('title')}, {c.metadata.get('department')}) "
-            f"{c.text}" for i, c in enumerate(chunks, start=1)
-        )
-        user_msg = f"Context passages:\n{context}\n\nQuestion: {query}"
-        try:
-            resp = self._client.messages.create(
-                model=_LLM_MODEL,
-                max_tokens=1024,
-                system=_SYSTEM_PROMPT,
-                messages=[{"role": "user", "content": user_msg}],
-            )
-            text = "".join(b.text for b in resp.content if getattr(b, "type", "") == "text")
-            return text.strip() or None
-        except Exception:
-            return None
+        return self._annotate(answer, confidence)
 
     # ------------------------------------------------------------------ #
     @staticmethod

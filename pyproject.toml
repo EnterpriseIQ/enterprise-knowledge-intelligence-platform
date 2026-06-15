@@ -23,6 +23,12 @@ dependencies = [
     "pandas>=2.1",
     "pypdf>=4.0",
     "reportlab>=4.0",
+    "prometheus-client>=0.20",
+    "langfuse>=2.0",
+    "opentelemetry-sdk>=1.20",
+    "opentelemetry-exporter-otlp>=1.20",
+    "opentelemetry-instrumentation-fastapi>=0.40b0",
+    "langgraph>=0.0.10"
 ]
 
 [project.optional-dependencies]

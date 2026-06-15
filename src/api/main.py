@@ -14,11 +14,17 @@ from __future__ import annotations
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
+from prometheus_client import make_asgi_app, Counter, Histogram
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
 from src.api.models import QueryRequest, QueryResponse
 from src.pipeline import RAGPipeline
 
 _state: dict = {}
+
+# Prometheus metrics
+QUERY_COUNT = Counter("erag_queries_total", "Total queries executed", ["role"])
+QUERY_LATENCY = Histogram("erag_query_latency_seconds", "Query latency in seconds")
 
 
 @asynccontextmanager
@@ -39,6 +45,13 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan,
 )
+
+# Add prometheus asgi middleware to route /metrics
+metrics_app = make_asgi_app()
+app.mount("/metrics", metrics_app)
+
+# Instrument the FastAPI app with OpenTelemetry
+FastAPIInstrumentor.instrument_app(app)
 
 
 def _pipeline() -> RAGPipeline:
@@ -72,11 +85,15 @@ def roles():
 @app.post("/query", response_model=QueryResponse)
 def query(req: QueryRequest):
     pipeline = _pipeline()
-    try:
-        result = pipeline.query(req.query, role=req.role,
-                                user_id=req.user_id or "", top_k=req.top_k)
-    except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    role_label = req.role or "anonymous"
+    QUERY_COUNT.labels(role=role_label).inc()
+
+    with QUERY_LATENCY.time():
+        try:
+            result = pipeline.agentic_query(req.query, role=req.role,
+                                            user_id=req.user_id or "", top_k=req.top_k)
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
     return result.to_dict()
 
 
