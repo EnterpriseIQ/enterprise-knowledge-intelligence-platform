@@ -99,31 +99,29 @@ class HybridRetriever:
             dense_rrf = reciprocal_rank_fusion(all_dense)
             sparse_rrf = reciprocal_rank_fusion(all_sparse)
             # Reconstruct dense and sparse lists based on RRF rank
+            dense_map = {}
+            for d_list in all_dense:
+                for d in d_list:
+                    if d["id"] not in dense_map:
+                        dense_map[d["id"]] = d
             dense = []
             for cid, score in dense_rrf.items():
-                # Find the metadata/text from the first dense result that contains this ID
-                for d_list in all_dense:
-                    for d in d_list:
-                        if d["id"] == cid:
-                            d_copy = d.copy()
-                            d_copy["semantic_score"] = score
-                            dense.append(d_copy)
-                            break
-                    else:
-                        continue
-                    break
+                if cid in dense_map:
+                    d_copy = dense_map[cid].copy()
+                    d_copy["semantic_score"] = score
+                    dense.append(d_copy)
+
+            sparse_map = {}
+            for s_list in all_sparse:
+                for s in s_list:
+                    if s["id"] not in sparse_map:
+                        sparse_map[s["id"]] = s
             sparse = []
             for cid, score in sparse_rrf.items():
-                for s_list in all_sparse:
-                    for s in s_list:
-                        if s["id"] == cid:
-                            s_copy = s.copy()
-                            s_copy["bm25_score"] = score
-                            sparse.append(s_copy)
-                            break
-                    else:
-                        continue
-                    break
+                if cid in sparse_map:
+                    s_copy = sparse_map[cid].copy()
+                    s_copy["bm25_score"] = score
+                    sparse.append(s_copy)
         else:
             dense = all_dense[0]
             sparse = all_sparse[0]
