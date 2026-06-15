@@ -56,9 +56,6 @@ class RBACEngine:
             return self.users[user_id]["role"]
         raise ValueError("Could not resolve a role: provide a valid role or known user_id.")
 
-    def allowed_departments(self, role: str) -> list[str]:
-        return self.roles[role]["departments"]
-
     def clearance(self, role: str) -> str:
         return self.roles[role]["clearance"]
 
