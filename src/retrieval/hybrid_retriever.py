@@ -16,12 +16,18 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+import os
+
 from src import config
 from src.retrieval.bm25_retriever import BM25Retriever
 from src.retrieval.query_router import RouteDecision
 from src.retrieval.semantic_retriever import SemanticRetriever
 from src.security.rbac import AccessDecision, RBACEngine
 from src.vectorstore import VectorStore
+
+from src.retrieval.rrf import reciprocal_rank_fusion
+from src.retrieval.reranker import CrossEncoderReranker
+from src.retrieval.query_expansion import QueryExpander
 
 
 @dataclass
@@ -66,6 +72,11 @@ class HybridRetriever:
         # BM25 index is built once over the full corpus; RBAC is applied at fuse time.
         self.bm25 = BM25Retriever(store.all_records())
 
+        self.expander = QueryExpander()
+        self.reranker = None
+        if os.getenv("ERAG_RERANKER") == "1":
+            self.reranker = CrossEncoderReranker()
+
     # ------------------------------------------------------------------ #
     def retrieve(self, query: str, role: str, route: RouteDecision | None = None,
                  top_k: int | None = None, user_id: str = ""):
@@ -73,8 +84,49 @@ class HybridRetriever:
         cand_k = config.CANDIDATE_K
 
         where = self.rbac.vector_prefilter(role)
-        dense = self.semantic.search(query, k=cand_k, where=where)
-        sparse = self.bm25.search(query, k=cand_k)
+
+        # Query expansion
+        queries = self.expander.expand(query)
+
+        all_dense = []
+        all_sparse = []
+        for q in queries:
+            all_dense.append(self.semantic.search(q, k=cand_k, where=where))
+            all_sparse.append(self.bm25.search(q, k=cand_k))
+
+        # Use RRF to fuse multi-query lists if we expanded
+        if len(queries) > 1:
+            dense_rrf = reciprocal_rank_fusion(all_dense)
+            sparse_rrf = reciprocal_rank_fusion(all_sparse)
+            # Reconstruct dense and sparse lists based on RRF rank
+            dense = []
+            for cid, score in dense_rrf.items():
+                # Find the metadata/text from the first dense result that contains this ID
+                for d_list in all_dense:
+                    for d in d_list:
+                        if d["id"] == cid:
+                            d_copy = d.copy()
+                            d_copy["semantic_score"] = score
+                            dense.append(d_copy)
+                            break
+                    else:
+                        continue
+                    break
+            sparse = []
+            for cid, score in sparse_rrf.items():
+                for s_list in all_sparse:
+                    for s in s_list:
+                        if s["id"] == cid:
+                            s_copy = s.copy()
+                            s_copy["bm25_score"] = score
+                            sparse.append(s_copy)
+                            break
+                    else:
+                        continue
+                    break
+        else:
+            dense = all_dense[0]
+            sparse = all_sparse[0]
 
         # Collect candidates by chunk id
         pool: dict[str, dict] = {}
@@ -107,6 +159,16 @@ class HybridRetriever:
                 chunk_id=cid, text=e["text"], metadata=meta,
                 semantic_score=e["semantic"], bm25_score=e["bm25"],
                 fused_score=min(1.0, fused + boost), route_boost=boost))
+
+        # Optional Reranking Step
+        if self.reranker and self.reranker.is_available and results:
+            texts_to_rerank = [r.text for r in results]
+            rerank_scores = self.reranker.rerank(query, texts_to_rerank)
+            rerank_norm = _minmax({r.chunk_id: s for r, s in zip(results, rerank_scores)})
+            for r in results:
+                # Blend reranker score and original fused score
+                # 0.7 reranker, 0.3 original
+                r.fused_score = min(1.0, 0.7 * rerank_norm.get(r.chunk_id, 0.0) + 0.3 * r.fused_score + r.route_boost)
 
         results.sort(key=lambda c: c.fused_score, reverse=True)
         return results[:top_k], decisions
