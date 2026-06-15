@@ -9,6 +9,12 @@ sentence-transformers>=2.6   # optional at runtime: hashing fallback if unavaila
 rank-bm25>=0.2.2
 numpy>=1.26                  # required by pandas
 pandas>=2.1
+prometheus-client>=0.20
+langfuse>=2.0
+opentelemetry-sdk>=1.20
+opentelemetry-exporter-otlp>=1.20
+opentelemetry-instrumentation-fastapi>=0.40b0
+langgraph>=0.0.10
 
 # Ingestion
 pypdf>=4.0
