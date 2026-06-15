@@ -41,9 +41,6 @@ class Embedder:
             return [v.tolist() for v in vecs]
         return [self._hash_embed(t) for t in texts]
 
-    def embed_one(self, text: str) -> list[float]:
-        return self.embed([text])[0]
-
     # --------------------------------------------------------------------- #
     def _hash_embed(self, text: str) -> list[float]:
         """Deterministic bag-of-words hashing embedding, L2-normalised.
