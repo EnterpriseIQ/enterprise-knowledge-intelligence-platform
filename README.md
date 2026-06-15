@@ -1,15 +1,20 @@
-# Secure Enterprise RAG Intelligence Platform
+# KnowledgeX - Enterprise Knowledge Intelligence Platform
+
+<p align="center">
+  <img src="docs/screenshots/architecture_animated.svg" alt="KnowledgeX Architecture">
+</p>
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
 ![FastAPI](https://img.shields.io/badge/API-FastAPI-009688)
+![LangGraph](https://img.shields.io/badge/Agentic-LangGraph-yellow)
 ![ChromaDB](https://img.shields.io/badge/Vector%20Store-ChromaDB-ff6f61)
-![Retrieval](https://img.shields.io/badge/Retrieval-Hybrid%20(Dense%2BBM25)-6f42c1)
+![Retrieval](https://img.shields.io/badge/Retrieval-Hybrid%20%2B%20RRF%20%2B%20Rerank-6f42c1)
 ![Security](https://img.shields.io/badge/Security-RBAC%20enforced-critical)
 ![Tests](https://img.shields.io/badge/Tests-28%20passing-brightgreen)
 ![CI](https://img.shields.io/badge/CI-GitHub%20Actions-2088FF)
 ![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
-A production-oriented, **secure Retrieval-Augmented Generation (RAG)** platform that
+A production-oriented, **Agentic Retrieval-Augmented Generation (RAG)** platform that
 answers natural-language questions across heterogeneous enterprise data — PDFs,
 internal documents, CSV/SQL datasets and JSON logs — while enforcing **strict
 role-based access control (RBAC)**, generating **grounded, cited answers**, and
@@ -20,6 +25,14 @@ exposing **confidence indicators** and **full retrieval traceability**.
 > cross-department data leakage.**
 
 ---
+
+## KnowledgeX v2 Features
+
+- **Agentic RAG Pipeline (LangGraph)** — Decomposed monolithic generation into a robust Graph workflow with `Planner`, `Retriever`, `Reasoner`, and `Responder` agents capable of multi-hop self-correction.
+- **Advanced Retrieval** — Implemented **Cross-Encoder Reranking**, **Reciprocal Rank Fusion (RRF)**, and **Query Expansion** to push retrieval quality to the limit.
+- **Local & Remote LLM Providers** — Modularized generation behind a provider abstraction supporting **Ollama (local)**, Anthropic, OpenAI, and Gemini, while retaining the deterministic offline extractive fallback.
+- **Production Observability** — Full instrumentation via **OpenTelemetry**, **Prometheus**, and **Langfuse** for latency, throughput, and generation quality tracking.
+- **Evaluation Framework** — Automated benchmarks generating static metrics on Precision, Recall, MRR, NDCG, and Groundedness.
 
 ## Executive Summary
 
@@ -297,12 +310,7 @@ without code changes.
 **Identity & access** — Azure AD / Active Directory integration, SSO (OIDC/SAML),
 multi-tenant isolation (per-tenant collections), field/row-level RBAC for structured data.
 
-**Retrieval & generation** — cross-encoder **reranking** over the fused top-N, learned
-query routing, a human-feedback loop (thumbs up/down → training signal).
+**Retrieval & generation** — learned query routing, a human-feedback loop (thumbs up/down → training signal).
 
 **Observability & governance** — an **observability dashboard**, **audit analytics**,
-**enterprise monitoring** (metrics/traces/alerts), hash-chained tamper-evident audit log.
-
-**Evaluation** — an **advanced evaluation framework** with labelled qrels
-(precision/recall/MRR), automated RBAC-leakage regression gates, and citation-faithfulness
-scoring in CI.
+hash-chained tamper-evident audit log.
