@@ -76,22 +76,23 @@ class RBACEngine:
 
         # 1. Department scope
         if not is_admin and department not in depts:
-            return self._deny(user_id, role, doc_id, department, sensitivity,
-                              f"role '{role}' has no access to department '{department}'")
+            return self._deny(user_id, role, doc_meta, f"role '{role}' has no access to department '{department}'")
         # 2. Clearance
         if self._rank.get(sensitivity, 99) > self._rank.get(role_cfg["clearance"], -1):
-            return self._deny(user_id, role, doc_id, department, sensitivity,
+            return self._deny(user_id, role, doc_meta,
                               f"document sensitivity '{sensitivity}' exceeds role clearance "
                               f"'{role_cfg['clearance']}'")
         # 3. Explicit ACL
         if explicit_roles and not is_admin and role not in explicit_roles:
-            return self._deny(user_id, role, doc_id, department, sensitivity,
-                              f"document restricted to roles {explicit_roles}")
+            return self._deny(user_id, role, doc_meta, f"document restricted to roles {explicit_roles}")
 
         return AccessDecision(user_id, role, doc_id, department, sensitivity, True,
                               "authorised: department scope, clearance and ACL satisfied")
 
-    def _deny(self, user_id, role, doc_id, department, sensitivity, reason) -> AccessDecision:
+    def _deny(self, user_id: str, role: str, doc_meta: dict, reason: str) -> AccessDecision:
+        department = doc_meta.get("department", "")
+        sensitivity = doc_meta.get("sensitivity", "internal")
+        doc_id = doc_meta.get("doc_id", "")
         return AccessDecision(user_id, role, doc_id, department, sensitivity, False, reason)
 
     # ------------------------------------------------------------------ #
