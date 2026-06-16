@@ -1,0 +1,4 @@
+## 2023-10-27 - [CRITICAL] SQL Injection in ingestion/sql_loader.py
+**Vulnerability:** The `load_sql` function in `src/ingestion/sql_loader.py` iterates through table names and incorporates them unescaped into an f-string: `cur.execute(f"SELECT * FROM {table} LIMIT {max_rows_per_table}")`.
+**Learning:** If an attacker can craft a table name in an ingested SQLite database (e.g. `users UNION SELECT ...`), they can execute arbitrary SQL read queries and extract information from the database or even beyond it if the database has other tables. Even though it's opened in read-only mode, they could extract schemas or data they otherwise shouldn't via UNION SELECT.
+**Prevention:** Always quote identifiers using proper escaping methods when constructing queries dynamically, e.g., `f"SELECT * FROM \"{table.replace('"', '""')}\" LIMIT ?"` or similar secure techniques.

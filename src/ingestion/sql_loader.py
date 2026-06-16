@@ -19,7 +19,8 @@ def load_sql(path: Path, max_rows_per_table: int = 500) -> str:
 
     blocks: list[str] = [f"SQL database: {path.name}", f"Tables: {', '.join(tables)}", ""]
     for table in tables:
-        cur.execute(f"SELECT * FROM {table} LIMIT {max_rows_per_table}")
+        safe_table = '"' + table.replace('"', '""') + '"'
+        cur.execute(f"SELECT * FROM {safe_table} LIMIT ?", (max_rows_per_table,))
         rows = cur.fetchall()
         cols = rows[0].keys() if rows else [d[0] for d in cur.description]
         blocks.append(f"Table {table} (columns: {', '.join(cols)}):")
