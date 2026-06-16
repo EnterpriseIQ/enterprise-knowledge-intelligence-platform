@@ -11,6 +11,7 @@ The pipeline is built once at startup so the model and index are warm.
 """
 from __future__ import annotations
 
+import asyncio
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
@@ -29,8 +30,12 @@ QUERY_LATENCY = Histogram("erag_query_latency_seconds", "Query latency in second
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    pipeline = RAGPipeline()
-    stats = pipeline.build_index()
+    def _setup():
+        p = RAGPipeline()
+        s = p.build_index()
+        return p, s
+
+    pipeline, stats = await asyncio.to_thread(_setup)
     _state["pipeline"] = pipeline
     _state["stats"] = stats
     yield
