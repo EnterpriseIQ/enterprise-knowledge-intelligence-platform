@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import math
 import re
-from collections import Counter
+from collections import Counter, defaultdict
 
 
 def _tok(text: str) -> list[str]:
@@ -40,10 +40,14 @@ class BM25Retriever:
         self.N = len(self.corpus_tokens)
         self.avgdl = (sum(len(d) for d in self.corpus_tokens) / self.N) if self.N else 0.0
         self.df: Counter = Counter()
-        for doc in self.corpus_tokens:
-            for term in set(doc):
+        self.inverted_index: dict[str, list[tuple[int, int]]] = defaultdict(list)
+        self.doc_lens = [len(d) for d in self.corpus_tokens]
+
+        for i, doc in enumerate(self.corpus_tokens):
+            term_counts = Counter(doc)
+            for term, count in term_counts.items():
                 self.df[term] += 1
-        self.doc_freqs = [Counter(doc) for doc in self.corpus_tokens]
+                self.inverted_index[term].append((i, count))
 
     def _builtin_scores(self, query_tokens, k1=1.5, b=0.75) -> list[float]:
         scores = [0.0] * self.N
@@ -51,13 +55,17 @@ class BM25Retriever:
             if term not in self.df:
                 continue
             idf = math.log(1 + (self.N - self.df[term] + 0.5) / (self.df[term] + 0.5))
-            for i, freq in enumerate(self.doc_freqs):
-                f = freq.get(term, 0)
-                if not f:
-                    continue
-                dl = len(self.corpus_tokens[i])
-                denom = f + k1 * (1 - b + b * dl / (self.avgdl or 1))
-                scores[i] += idf * (f * (k1 + 1)) / denom
+
+            # Pre-calculate invariant terms for the inner loop
+            idf_times_k1_plus_1 = idf * (k1 + 1)
+            b_div_avgdl = b / (self.avgdl or 1.0)
+            one_minus_b = 1 - b
+
+            # Only iterate over documents that actually contain the term
+            for i, f in self.inverted_index.get(term, []):
+                dl = self.doc_lens[i]
+                denom = f + k1 * (one_minus_b + b_div_avgdl * dl)
+                scores[i] += (idf_times_k1_plus_1 * f) / denom
         return scores
 
     # ------------------------------------------------------------------ #
