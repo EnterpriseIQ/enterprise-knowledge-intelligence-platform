@@ -40,10 +40,11 @@ def score_confidence(query: str, chunks: list[RetrievedChunk]) -> dict:
     # platform say "insufficient evidence" instead of hallucinating when the corpus
     # does not contain the answer (the fused score alone is min-max normalised and
     # would always look confident).
-    top_terms = _terms(chunks[0].text)
+    chunk_terms = [_terms(c.text) for c in chunks[:5]]
+    top_terms = chunk_terms[0]
     context_terms: set[str] = set()
-    for c in chunks[:3]:
-        context_terms |= _terms(c.text)
+    for terms in chunk_terms[:3]:
+        context_terms |= terms
 
     if q_terms:
         coverage = len(q_terms & context_terms) / len(q_terms)        # over top-3
@@ -52,7 +53,7 @@ def score_confidence(query: str, chunks: list[RetrievedChunk]) -> dict:
         coverage = top_coverage = 0.5  # vague query: stay neutral
 
     # Corroboration: how many of the top chunks actually mention a query term.
-    support = sum(1 for c in chunks[:5] if q_terms & _terms(c.text))
+    support = sum(1 for terms in chunk_terms if q_terms & terms)
     support_factor = min(1.0, support / 3.0)
 
     top_doc = chunks[0].metadata.get("doc_id")
