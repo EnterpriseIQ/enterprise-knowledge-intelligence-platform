@@ -15,6 +15,7 @@ import asyncio
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from prometheus_client import make_asgi_app, Counter, Histogram
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
@@ -49,6 +50,15 @@ app = FastAPI(
                 "confidence scoring.",
     version="1.0.0",
     lifespan=lifespan,
+)
+
+# Configure CORS Middleware securely
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Add prometheus asgi middleware to route /metrics
