@@ -51,7 +51,7 @@ class Embedder:
         vec = [0.0] * self.dim
         tokens = [t for t in _tokenise(text)]
         for tok in tokens:
-            h = int(hashlib.md5(tok.encode("utf-8")).hexdigest(), 16)
+            h = int(hashlib.sha256(tok.encode("utf-8")).hexdigest(), 16)
             idx = h % self.dim
             sign = 1.0 if (h >> 8) & 1 else -1.0
             vec[idx] += sign
