@@ -1,0 +1,4 @@
+## 2025-02-18 - [SQL Injection in SQLite Ingestion]
+**Vulnerability:** `load_sql` in `src/ingestion/sql_loader.py` interpolates table and column names directly into SQL strings without proper escaping. This allowed malicious SQLite databases with crafted table or column names to execute arbitrary SQL or break parsing.
+**Learning:** Even though `sqlite3` driver was connected in read-only mode (`?mode=ro`), executing a `UNION ALL` statement through string interpolation allowed an attacker to inject queries that can extract secrets from other tables or execute statements leading to denial of service. Dynamic SQL query construction must always escape literals and identifiers.
+**Prevention:** I escaped single quotes (`'`) as double single quotes (`''`) for string literals and double quotes (`"`) as double double quotes (`""`) for table and column identifiers when building the `SELECT` queries string.

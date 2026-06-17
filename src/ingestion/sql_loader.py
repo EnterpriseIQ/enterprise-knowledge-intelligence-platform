@@ -40,8 +40,19 @@ def load_sql(path: Path, max_rows_per_table: int = 500) -> str:
             cols = schemas.get(table, [])
             if not cols:
                 continue
-            concat_expr = " || '; ' || ".join([f"'{c}=' || coalesce(\"{c}\", 'None')" for c in cols])
-            queries.append(f"SELECT * FROM (SELECT '{table}', {concat_expr} FROM \"{table}\" LIMIT {max_rows_per_table})")
+
+            safe_cols = []
+            for c in cols:
+                c_lit = c.replace("'", "''")
+                c_id = c.replace('"', '""')
+                safe_cols.append(f"'{c_lit}=' || coalesce(\"{c_id}\", 'None')")
+
+            concat_expr = " || '; ' || ".join(safe_cols)
+
+            t_lit = table.replace("'", "''")
+            t_id = table.replace('"', '""')
+
+            queries.append(f"SELECT * FROM (SELECT '{t_lit}', {concat_expr} FROM \"{t_id}\" LIMIT {max_rows_per_table})")
 
         if queries:
             union_query = " UNION ALL ".join(queries)
