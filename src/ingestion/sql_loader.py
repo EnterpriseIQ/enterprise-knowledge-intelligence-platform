@@ -36,6 +36,7 @@ def load_sql(path: Path, max_rows_per_table: int = 500) -> str:
     for i in range(0, len(tables), batch_size):
         batch_tables = tables[i:i+batch_size]
         queries = []
+        params = []
         for table in batch_tables:
             cols = schemas.get(table, [])
             if not cols:
@@ -52,11 +53,12 @@ def load_sql(path: Path, max_rows_per_table: int = 500) -> str:
             t_lit = table.replace("'", "''")
             t_id = table.replace('"', '""')
 
-            queries.append(f"SELECT * FROM (SELECT '{t_lit}', {concat_expr} FROM \"{t_id}\" LIMIT {max_rows_per_table})")
+            queries.append(f"SELECT * FROM (SELECT '{t_lit}', {concat_expr} FROM \"{t_id}\" LIMIT ?)")
+            params.append(max_rows_per_table)
 
         if queries:
             union_query = " UNION ALL ".join(queries)
-            cur.execute(union_query)
+            cur.execute(union_query, params)
 
             table_rows = {t: [] for t in batch_tables}
             for t_name, data in cur.fetchall():
