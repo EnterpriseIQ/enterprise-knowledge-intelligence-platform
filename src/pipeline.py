@@ -20,7 +20,7 @@ from src.generation.confidence import score_confidence
 from src.ingestion import load_corpus
 from src.processing import Embedder, chunk_documents
 from src.retrieval.cross_source import diversify, source_coverage
-from src.retrieval.hybrid_retriever import HybridRetriever
+from src.retrieval.hybrid_retriever import HybridRetriever, RetrievalRequest
 from src.retrieval.query_router import QueryRouter
 from src.security import AuditLogger, RBACEngine
 from src.vectorstore import VectorStore
@@ -142,9 +142,14 @@ class RAGPipeline:
         eff_role = self.rbac.resolve_role(user_id or None, role)
         route = self.router.classify(query)
 
-        chunks, decisions = self.retriever.retrieve(
-            query, role=eff_role, route=route, top_k=(top_k or config.TOP_K) * 2,
-            user_id=user_id)
+        request = RetrievalRequest(
+            query=query,
+            role=eff_role,
+            route=route,
+            top_k=(top_k or config.TOP_K) * 2,
+            user_id=user_id
+        )
+        chunks, decisions = self.retriever.retrieve(request)
         chunks = diversify(chunks, top_k=top_k or config.TOP_K)
 
         confidence = score_confidence(query, chunks)

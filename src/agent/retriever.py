@@ -1,5 +1,6 @@
 from src.agent.state import AgentState
 from src.retrieval.cross_source import diversify
+from src.retrieval.hybrid_retriever import RetrievalRequest
 
 class RetrievalAgent:
     def __init__(self, pipeline):
@@ -14,12 +15,13 @@ class RetrievalAgent:
         for sq in state["sub_queries"]:
             route = self.pipeline.router.classify(sq)
 
-            chunks, _ = self.pipeline.retriever.retrieve(
-                sq,
+            request = RetrievalRequest(
+                query=sq,
                 role=state["role"],
                 route=route,
                 user_id=state["user_id"]
             )
+            chunks, _ = self.pipeline.retriever.retrieve(request)
             all_chunks.extend(chunks)
 
         # Diversify to prevent one sub-query from dominating

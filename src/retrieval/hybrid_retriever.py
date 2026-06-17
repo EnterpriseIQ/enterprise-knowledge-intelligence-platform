@@ -31,6 +31,14 @@ from src.retrieval.query_expansion import QueryExpander
 
 
 @dataclass
+class RetrievalRequest:
+    query: str
+    role: str
+    route: RouteDecision | None = None
+    top_k: int | None = None
+    user_id: str = ""
+
+@dataclass
 class RetrievedChunk:
     chunk_id: str
     text: str
@@ -78,15 +86,14 @@ class HybridRetriever:
             self.reranker = CrossEncoderReranker()
 
     # ------------------------------------------------------------------ #
-    def retrieve(self, query: str, role: str, route: RouteDecision | None = None,
-                 top_k: int | None = None, user_id: str = ""):
-        top_k = top_k or config.TOP_K
+    def retrieve(self, request: RetrievalRequest):
+        top_k = request.top_k or config.TOP_K
         cand_k = config.CANDIDATE_K
 
-        where = self.rbac.vector_prefilter(role)
+        where = self.rbac.vector_prefilter(request.role)
 
         # Query expansion
-        queries = self.expander.expand(query)
+        queries = self.expander.expand(request.query)
 
         all_dense = []
         all_sparse = []
@@ -140,13 +147,13 @@ class HybridRetriever:
         sem_norm = _minmax({cid: e["semantic"] for cid, e in pool.items()})
         bm_norm = _minmax({cid: e["bm25"] for cid, e in pool.items()})
 
-        boosted_depts = set(route.departments) if route else set()
+        boosted_depts = set(request.route.departments) if request.route else set()
 
         results: list[RetrievedChunk] = []
         decisions: list[AccessDecision] = []
         for cid, e in pool.items():
             meta = e["metadata"]
-            decision = self.rbac.check(role, meta, user_id=user_id)
+            decision = self.rbac.check(request.role, meta, user_id=request.user_id)
             decisions.append(decision)
             if not decision.allowed:
                 continue  # never surface unauthorised content
@@ -161,7 +168,7 @@ class HybridRetriever:
         # Optional Reranking Step
         if self.reranker and self.reranker.is_available and results:
             texts_to_rerank = [r.text for r in results]
-            rerank_scores = self.reranker.rerank(query, texts_to_rerank)
+            rerank_scores = self.reranker.rerank(request.query, texts_to_rerank)
             rerank_norm = _minmax({r.chunk_id: s for r, s in zip(results, rerank_scores)})
             for r in results:
                 # Blend reranker score and original fused score
