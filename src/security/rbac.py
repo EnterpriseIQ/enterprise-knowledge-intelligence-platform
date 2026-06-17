@@ -59,9 +59,6 @@ class RBACEngine:
     def allowed_departments(self, role: str) -> list[str]:
         return self.roles[role]["departments"]
 
-    def clearance(self, role: str) -> str:
-        return self.roles[role]["clearance"]
-
     # ------------------------------------------------------------------ #
     def check(self, role: str, doc_meta: dict, user_id: str = "") -> AccessDecision:
         department = doc_meta.get("department", "")
