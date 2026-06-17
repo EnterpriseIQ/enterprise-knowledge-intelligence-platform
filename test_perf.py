@@ -1,15 +1,13 @@
 import time
-import os
 
-from src.vectorstore import VectorStore
-from src.security.rbac import RBACEngine
-from src.retrieval.hybrid_retriever import HybridRetriever
 from src.pipeline import RAGPipeline
 from src.retrieval.query_expansion import QueryExpander
+
 
 class MockExpander(QueryExpander):
     def expand(self, query):
         return [query + f" {i}" for i in range(10)]
+
 
 def run_benchmark():
     # Let's use the RAGPipeline as it properly sets up the dependencies
@@ -28,6 +26,7 @@ def run_benchmark():
     duration = end_time - start_time
     print(f"Time taken: {duration:.4f} seconds")
     return duration
+
 
 if __name__ == "__main__":
     run_benchmark()

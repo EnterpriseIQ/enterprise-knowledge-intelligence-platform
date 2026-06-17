@@ -1,11 +1,11 @@
-from typing import TypedDict, Annotated, Optional
-import operator
+from typing import TypedDict
+
 
 class AgentState(TypedDict):
     """The state of the agent workflow."""
 
     query: str
-    role: Optional[str]
+    role: str | None
     user_id: str
 
     # Accumulated intermediate state

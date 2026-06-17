@@ -3,6 +3,7 @@
 Verify the synthetic corpus is complete, well-formed and carries the security
 metadata the rest of the platform relies on.
 """
+
 from __future__ import annotations
 
 import json
@@ -28,8 +29,10 @@ def test_all_source_types_present():
 
 def test_every_entry_has_security_metadata():
     manifest = json.loads((config.DOCUMENTS_DIR / "manifest.json").read_text())
-    levels = set(config.ACCESS_POLICY_FILE and json.loads(
-        config.ACCESS_POLICY_FILE.read_text())["sensitivity_levels"])
+    levels = set(
+        config.ACCESS_POLICY_FILE
+        and json.loads(config.ACCESS_POLICY_FILE.read_text())["sensitivity_levels"]
+    )
     for m in manifest:
         assert m["department"] in config.DEPARTMENTS
         assert m["sensitivity"] in levels

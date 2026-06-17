@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import Optional
 
 from src.retrieval.hybrid_retriever import RetrievedChunk
+
 
 class GenerationProvider(ABC):
     """Base class for all answer generation providers."""
@@ -13,7 +13,9 @@ class GenerationProvider(ABC):
         pass
 
     @abstractmethod
-    def generate(self, query: str, chunks: list[RetrievedChunk], system_prompt: str) -> Optional[str]:
+    def generate(
+        self, query: str, chunks: list[RetrievedChunk], system_prompt: str
+    ) -> str | None:
         """Generate an answer using the given chunks and system prompt.
 
         Returns:

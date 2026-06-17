@@ -5,6 +5,7 @@ exact identifiers, codes and rare terms (e.g. "INC-2025-021", "OPS-5044") that
 embedding models can blur together. Built on ``rank-bm25`` with a pure-Python
 fallback so the platform has no hard dependency on it.
 """
+
 from __future__ import annotations
 
 import math
@@ -76,6 +77,12 @@ class BM25Retriever:
             if scores[i] <= 0:
                 continue
             r = self.records[i]
-            out.append({"id": r["id"], "text": r["text"], "metadata": r["metadata"],
-                        "bm25_score": float(scores[i])})
+            out.append(
+                {
+                    "id": r["id"],
+                    "text": r["text"],
+                    "metadata": r["metadata"],
+                    "bm25_score": float(scores[i]),
+                }
+            )
         return out

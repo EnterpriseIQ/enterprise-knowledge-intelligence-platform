@@ -8,6 +8,7 @@ after the fact.
 If ChromaDB is unavailable, a NumPy cosine-similarity store provides the same
 interface so the platform always runs.
 """
+
 from __future__ import annotations
 
 from src import config
@@ -39,7 +40,8 @@ class VectorStore:
             except Exception:
                 pass
             self._collection = self._client.create_collection(
-                name=self.collection_name, metadata={"hnsw:space": "cosine"})
+                name=self.collection_name, metadata={"hnsw:space": "cosine"}
+            )
             self.backend = "chromadb"
         except Exception:
             self._client = None
@@ -50,8 +52,12 @@ class VectorStore:
     def add(self, ids, texts, metadatas, embeddings=None):
         embeddings = embeddings or self._embed(texts)
         if self.backend == "chromadb":
-            self._collection.add(ids=list(ids), documents=list(texts),
-                                 metadatas=list(metadatas), embeddings=list(embeddings))
+            self._collection.add(
+                ids=list(ids),
+                documents=list(texts),
+                metadatas=list(metadatas),
+                embeddings=list(embeddings),
+            )
         else:
             for i, t, m, e in zip(ids, texts, metadatas, embeddings, strict=False):
                 self._mem.append({"id": i, "text": t, "metadata": m, "embedding": e})
@@ -62,24 +68,37 @@ class VectorStore:
         return len(self._mem)
 
     # --------------------------------------------------------------------- #
-    def query(self, query_text: str, k: int, where: dict | None = None) -> list[dict]:
-        """Return up to ``k`` nearest chunks, optionally RBAC-prefiltered by ``where``."""
-        q_emb = self._embed([query_text])[0]
+    def query_batch(
+        self, query_texts: list[str], k: int, where: dict | None = None
+    ) -> list[list[dict]]:
+        """Return up to ``k`` nearest chunks for each query in ``query_texts``, optionally RBAC-prefiltered by ``where``."""
+        if not query_texts:
+            return []
+        q_embs = self._embed(query_texts)
         if self.backend == "chromadb":
             res = self._collection.query(
-                query_embeddings=[q_emb], n_results=k,
+                query_embeddings=q_embs,
+                n_results=k,
                 where=_to_chroma_where(where) if where else None,
             )
             out = []
-            ids = res.get("ids", [[]])[0]
-            docs = res.get("documents", [[]])[0]
-            metas = res.get("metadatas", [[]])[0]
-            dists = res.get("distances", [[]])[0]
-            for i, d, m, dist in zip(ids, docs, metas, dists, strict=False):
-                out.append({"id": i, "text": d, "metadata": m,
-                            "score": 1.0 - float(dist)})  # cosine distance -> similarity
+            for idx in range(len(query_texts)):
+                batch_out = []
+                ids = res.get("ids", [[]])[idx] if res.get("ids") else []
+                docs = res.get("documents", [[]])[idx] if res.get("documents") else []
+                metas = res.get("metadatas", [[]])[idx] if res.get("metadatas") else []
+                dists = res.get("distances", [[]])[idx] if res.get("distances") else []
+                for i, d, m, dist in zip(ids, docs, metas, dists, strict=False):
+                    batch_out.append(
+                        {"id": i, "text": d, "metadata": m, "score": 1.0 - float(dist)}
+                    )  # cosine distance -> similarity
+                out.append(batch_out)
             return out
-        return self._mem_query(q_emb, k, where)
+        return [self._mem_query(emb, k, where) for emb in q_embs]
+
+    def query(self, query_text: str, k: int, where: dict | None = None) -> list[dict]:
+        """Return up to ``k`` nearest chunks, optionally RBAC-prefiltered by ``where``."""
+        return self.query_batch([query_text], k, where)[0]
 
     def _mem_query(self, q_emb, k, where) -> list[dict]:
         def ok(meta) -> bool:
@@ -91,15 +110,19 @@ class VectorStore:
                 continue
             scored.append((_cosine(q_emb, rec["embedding"]), rec))
         scored.sort(key=lambda x: x[0], reverse=True)
-        return [{"id": r["id"], "text": r["text"], "metadata": r["metadata"], "score": s}
-                for s, r in scored[:k]]
+        return [
+            {"id": r["id"], "text": r["text"], "metadata": r["metadata"], "score": s}
+            for s, r in scored[:k]
+        ]
 
     def all_records(self) -> list[dict]:
         """Expose all chunks (used to build the BM25 sparse index)."""
         if self.backend == "chromadb":
             got = self._collection.get(include=["documents", "metadatas"])
-            return [{"id": i, "text": t, "metadata": m}
-                    for i, t, m in zip(got["ids"], got["documents"], got["metadatas"], strict=False)]
+            return [
+                {"id": i, "text": t, "metadata": m}
+                for i, t, m in zip(got["ids"], got["documents"], got["metadatas"], strict=False)
+            ]
         return [{"id": r["id"], "text": r["text"], "metadata": r["metadata"]} for r in self._mem]
 
 

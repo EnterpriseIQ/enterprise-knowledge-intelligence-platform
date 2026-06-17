@@ -4,6 +4,7 @@ All tunable paths and parameters live here so the rest of the codebase has a
 single source of truth. Values can be overridden via environment variables,
 which keeps the platform twelve-factor friendly for containerised deployment.
 """
+
 from __future__ import annotations
 
 import os
@@ -41,7 +42,7 @@ COLLECTION_NAME = os.getenv("ERAG_COLLECTION", "enterprise_corpus")
 # --------------------------------------------------------------------------- #
 # Chunking
 # --------------------------------------------------------------------------- #
-CHUNK_SIZE = int(os.getenv("ERAG_CHUNK_SIZE", "900"))        # characters
+CHUNK_SIZE = int(os.getenv("ERAG_CHUNK_SIZE", "900"))  # characters
 CHUNK_OVERLAP = int(os.getenv("ERAG_CHUNK_OVERLAP", "150"))  # characters
 
 # --------------------------------------------------------------------------- #

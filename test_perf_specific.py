@@ -1,12 +1,11 @@
-import time
-import os
 import random
+import time
 import uuid
 
-from src.retrieval.hybrid_retriever import HybridRetriever
 from src.retrieval.rrf import reciprocal_rank_fusion
 
 # We just want to measure the specific code section.
+
 
 def run_benchmark():
     # Generate some fake data
@@ -24,18 +23,22 @@ def run_benchmark():
         query_sparse = []
         for i in range(docs_per_query):
             doc_id = random.choice(doc_ids)
-            query_dense.append({
-                "id": doc_id,
-                "text": f"Dense doc {doc_id}",
-                "metadata": {"source": "fake"},
-                "semantic_score": random.random()
-            })
-            query_sparse.append({
-                "id": doc_id,
-                "text": f"Sparse doc {doc_id}",
-                "metadata": {"source": "fake"},
-                "bm25_score": random.random()
-            })
+            query_dense.append(
+                {
+                    "id": doc_id,
+                    "text": f"Dense doc {doc_id}",
+                    "metadata": {"source": "fake"},
+                    "semantic_score": random.random(),
+                }
+            )
+            query_sparse.append(
+                {
+                    "id": doc_id,
+                    "text": f"Sparse doc {doc_id}",
+                    "metadata": {"source": "fake"},
+                    "bm25_score": random.random(),
+                }
+            )
         all_dense.append(query_dense)
         all_sparse.append(query_sparse)
 
@@ -114,6 +117,7 @@ def run_benchmark():
 
     print(f"Optimized Time: {duration_optimized:.6f} seconds")
     print(f"Speedup: {duration_original / duration_optimized:.2f}x")
+
 
 if __name__ == "__main__":
     run_benchmark()

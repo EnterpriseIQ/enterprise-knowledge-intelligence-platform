@@ -1,6 +1,7 @@
 from src.agent.state import AgentState
 from src.generation.citation import build_citations
 
+
 class ResponseAgent:
     def __init__(self, pipeline):
         self.pipeline = pipeline
@@ -14,8 +15,4 @@ class ResponseAgent:
         answer = self.pipeline.generator.generate(query, chunks, confidence)
         citations = build_citations(chunks)
 
-        return {
-            **state,
-            "answer": answer,
-            "citations": citations
-        }
+        return {**state, "answer": answer, "citations": citations}

@@ -5,6 +5,7 @@ class QueryExpander:
     simply returning the query as-is to preserve offline functionality and
     avoid heavy dependencies unless explicitly requested.
     """
+
     def expand(self, query: str) -> list[str]:
         # For now, simply return the query itself.
         # In a full deployment, this would invoke an LLM or a thesaurus

@@ -4,6 +4,7 @@ Every query and every access decision is appended to a tamper-evident JSONL audi
 trail. This supports the explainability and compliance requirements: who asked
 what, which sources were authorised, and which were denied and why.
 """
+
 from __future__ import annotations
 
 import json
@@ -23,30 +24,35 @@ class AuditLogger:
         with open(self.path, "a", encoding="utf-8") as f:
             f.write(json.dumps(record) + "\n")
 
-    def log_query(self, user_id: str, role: str, query: str,
-                  authorised: int, denied: int, confidence: float) -> None:
-        self._write({
-            "type": "query",
-            "user_id": user_id,
-            "role": role,
-            "query": query,
-            "authorised_sources": authorised,
-            "denied_sources": denied,
-            "confidence": round(confidence, 4),
-        })
+    def log_query(
+        self, user_id: str, role: str, query: str, authorised: int, denied: int, confidence: float
+    ) -> None:
+        self._write(
+            {
+                "type": "query",
+                "user_id": user_id,
+                "role": role,
+                "query": query,
+                "authorised_sources": authorised,
+                "denied_sources": denied,
+                "confidence": round(confidence, 4),
+            }
+        )
 
     def log_access_decisions(self, user_id: str, role: str, decisions: list) -> None:
         for d in decisions:
-            self._write({
-                "type": "access_decision",
-                "user_id": user_id,
-                "role": role,
-                "doc_id": d.doc_id,
-                "department": d.department,
-                "sensitivity": d.sensitivity,
-                "allowed": d.allowed,
-                "reason": d.reason,
-            })
+            self._write(
+                {
+                    "type": "access_decision",
+                    "user_id": user_id,
+                    "role": role,
+                    "doc_id": d.doc_id,
+                    "department": d.department,
+                    "sensitivity": d.sensitivity,
+                    "allowed": d.allowed,
+                    "reason": d.reason,
+                }
+            )
 
     def tail(self, n: int = 20) -> list[dict]:
         if not self.path.exists():

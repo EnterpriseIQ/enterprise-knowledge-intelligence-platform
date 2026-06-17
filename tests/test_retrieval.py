@@ -1,4 +1,5 @@
 """Retrieval, routing, citation and confidence tests."""
+
 from __future__ import annotations
 
 from src.retrieval.query_router import QueryRouter
@@ -49,6 +50,5 @@ def test_low_confidence_refuses(pipeline):
 
 def test_cross_source_coverage(pipeline):
     """A broad engineering/ops question should be able to span >1 source type."""
-    res = pipeline.query("Show recent operational tickets and platform incidents.",
-                         role="Admin")
+    res = pipeline.query("Show recent operational tickets and platform incidents.", role="Admin")
     assert res.coverage["source_types"]

@@ -1,14 +1,17 @@
 import re
-from typing import Optional
 
 from src.generation.confidence import _terms
 from src.retrieval.hybrid_retriever import RetrievedChunk
+
 from .base import GenerationProvider
 
 _SENT_SPLIT = re.compile(r"(?<=[.!?])\s+")
-_REFUSAL = ("I could not find sufficient authorised evidence to answer this "
-            "question confidently. Please refine the question or check that you "
-            "have access to the relevant documents.")
+_REFUSAL = (
+    "I could not find sufficient authorised evidence to answer this "
+    "question confidently. Please refine the question or check that you "
+    "have access to the relevant documents."
+)
+
 
 class ExtractiveProvider(GenerationProvider):
     """The default, fully offline, grounded extractive fallback provider."""
@@ -20,7 +23,9 @@ class ExtractiveProvider(GenerationProvider):
     def name(self) -> str:
         return "extractive"
 
-    def generate(self, query: str, chunks: list[RetrievedChunk], system_prompt: str) -> Optional[str]:
+    def generate(
+        self, query: str, chunks: list[RetrievedChunk], system_prompt: str
+    ) -> str | None:
         q_terms = _terms(query)
         scored: list[tuple[float, int, str]] = []  # (relevance, citation_marker, sentence)
         for marker, chunk in enumerate(chunks, start=1):
@@ -34,7 +39,7 @@ class ExtractiveProvider(GenerationProvider):
                     scored.append((rel, marker, sent))
 
         scored.sort(key=lambda x: x[0], reverse=True)
-        chosen = scored[:self.max_sentences]
+        chosen = scored[: self.max_sentences]
         if not chosen:
             return _REFUSAL
 
