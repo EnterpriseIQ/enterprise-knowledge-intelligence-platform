@@ -5,6 +5,7 @@ exact identifiers, codes and rare terms (e.g. "INC-2025-021", "OPS-5044") that
 embedding models can blur together. Built on ``rank-bm25`` with a pure-Python
 fallback so the platform has no hard dependency on it.
 """
+
 from __future__ import annotations
 
 import math
@@ -49,8 +50,10 @@ class BM25Retriever:
                 self.df[term] += 1
                 self.inverted_index[term].append((i, count))
 
-    def _builtin_scores(self, query_tokens, k1=1.5, b=0.75) -> list[float]:
-        scores = [0.0] * self.N
+    def _builtin_scores(self, query_tokens, k1=1.5, b=0.75) -> dict[int, float]:
+        # OPTIMIZATION: Instead of a dense array `[0.0] * self.N`, use a sparse dictionary.
+        # This prevents O(N) allocation and scoring for massive corpora.
+        scores = defaultdict(float)
         for term in query_tokens:
             if term not in self.df:
                 continue
@@ -73,17 +76,42 @@ class BM25Retriever:
         if not self.records:
             return []
         q_tokens = _tok(query)
+
         if self._impl is not None:
             scores = self._impl.get_scores(q_tokens)
-        else:
-            scores = self._builtin_scores(q_tokens)
+            ranked = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)
 
-        ranked = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)
-        out = []
-        for i in ranked[:k]:
-            if scores[i] <= 0:
-                continue
-            r = self.records[i]
-            out.append({"id": r["id"], "text": r["text"], "metadata": r["metadata"],
-                        "bm25_score": float(scores[i])})
-        return out
+            out = []
+            for i in ranked[:k]:
+                if scores[i] <= 0:
+                    continue
+                r = self.records[i]
+                out.append(
+                    {
+                        "id": r["id"],
+                        "text": r["text"],
+                        "metadata": r["metadata"],
+                        "bm25_score": float(scores[i]),
+                    }
+                )
+            return out
+        else:
+            scores_dict = self._builtin_scores(q_tokens)
+            # OPTIMIZATION: Only sort documents that actually match terms, taking O(M log M)
+            # where M is the number of matched documents, instead of O(N log N) where N is all docs.
+            ranked_items = sorted(scores_dict.items(), key=lambda x: x[1], reverse=True)
+
+            out = []
+            for i, score in ranked_items[:k]:
+                if score <= 0:
+                    continue
+                r = self.records[i]
+                out.append(
+                    {
+                        "id": r["id"],
+                        "text": r["text"],
+                        "metadata": r["metadata"],
+                        "bm25_score": float(score),
+                    }
+                )
+            return out
