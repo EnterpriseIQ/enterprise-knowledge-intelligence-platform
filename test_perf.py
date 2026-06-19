@@ -22,7 +22,9 @@ def run_benchmark():
     start_time = time.time()
     for _ in range(20):
         # The query string itself doesn't matter much as it's the retrieval loop we are testing
-        pipeline.retriever.retrieve("What is the remote work policy?", role="HR")
+        from src.retrieval.hybrid_retriever import RetrievalRequest
+        req = RetrievalRequest(query="What is the remote work policy?", role="HR")
+        pipeline.retriever.retrieve(req)
     end_time = time.time()
 
     duration = end_time - start_time
