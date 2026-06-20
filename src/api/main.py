@@ -14,12 +14,13 @@ from __future__ import annotations
 import asyncio
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_client import make_asgi_app, Counter, Histogram
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
 from src.api.models import QueryRequest, QueryResponse
+from src.api.auth import get_api_key
 from src.pipeline import RAGPipeline
 
 _state: dict = {}
@@ -84,7 +85,7 @@ def health():
     return {"status": "ok", "version": app.version, "index": _state.get("stats", {})}
 
 
-@app.get("/roles")
+@app.get("/roles", dependencies=[Depends(get_api_key)])
 def roles():
     rbac = _pipeline().rbac
     return {
@@ -97,7 +98,7 @@ def roles():
     }
 
 
-@app.post("/query", response_model=QueryResponse)
+@app.post("/query", response_model=QueryResponse, dependencies=[Depends(get_api_key)])
 def query(req: QueryRequest):
     pipeline = _pipeline()
     role_label = req.role or "anonymous"
@@ -112,6 +113,6 @@ def query(req: QueryRequest):
     return result.to_dict()
 
 
-@app.get("/audit")
+@app.get("/audit", dependencies=[Depends(get_api_key)])
 def audit(limit: int = 20):
     return {"entries": _pipeline().audit.tail(limit)}
