@@ -8,6 +8,7 @@ after the fact.
 If ChromaDB is unavailable, a NumPy cosine-similarity store provides the same
 interface so the platform always runs.
 """
+
 from __future__ import annotations
 
 from src import config
@@ -39,7 +40,8 @@ class VectorStore:
             except Exception:
                 pass
             self._collection = self._client.create_collection(
-                name=self.collection_name, metadata={"hnsw:space": "cosine"})
+                name=self.collection_name, metadata={"hnsw:space": "cosine"}
+            )
             self.backend = "chromadb"
         except Exception:
             self._client = None
@@ -50,8 +52,12 @@ class VectorStore:
     def add(self, ids, texts, metadatas, embeddings=None):
         embeddings = embeddings or self._embed(texts)
         if self.backend == "chromadb":
-            self._collection.add(ids=list(ids), documents=list(texts),
-                                 metadatas=list(metadatas), embeddings=list(embeddings))
+            self._collection.add(
+                ids=list(ids),
+                documents=list(texts),
+                metadatas=list(metadatas),
+                embeddings=list(embeddings),
+            )
         else:
             for i, t, m, e in zip(ids, texts, metadatas, embeddings, strict=False):
                 self._mem.append({"id": i, "text": t, "metadata": m, "embedding": e})
@@ -67,7 +73,8 @@ class VectorStore:
         q_emb = self._embed([query_text])[0]
         if self.backend == "chromadb":
             res = self._collection.query(
-                query_embeddings=[q_emb], n_results=k,
+                query_embeddings=[q_emb],
+                n_results=k,
                 where=_to_chroma_where(where) if where else None,
             )
             out = []
@@ -76,8 +83,9 @@ class VectorStore:
             metas = res.get("metadatas", [[]])[0]
             dists = res.get("distances", [[]])[0]
             for i, d, m, dist in zip(ids, docs, metas, dists, strict=False):
-                out.append({"id": i, "text": d, "metadata": m,
-                            "score": 1.0 - float(dist)})  # cosine distance -> similarity
+                out.append(
+                    {"id": i, "text": d, "metadata": m, "score": 1.0 - float(dist)}
+                )  # cosine distance -> similarity
             return out
         return self._mem_query(q_emb, k, where)
 
@@ -91,23 +99,33 @@ class VectorStore:
                 continue
             scored.append((_cosine(q_emb, rec["embedding"]), rec))
         scored.sort(key=lambda x: x[0], reverse=True)
-        return [{"id": r["id"], "text": r["text"], "metadata": r["metadata"], "score": s}
-                for s, r in scored[:k]]
+        return [
+            {"id": r["id"], "text": r["text"], "metadata": r["metadata"], "score": s}
+            for s, r in scored[:k]
+        ]
 
     def all_records(self) -> list[dict]:
         """Expose all chunks (used to build the BM25 sparse index)."""
         if self.backend == "chromadb":
             got = self._collection.get(include=["documents", "metadatas"])
-            return [{"id": i, "text": t, "metadata": m}
-                    for i, t, m in zip(got["ids"], got["documents"], got["metadatas"], strict=False)]
+            return [
+                {"id": i, "text": t, "metadata": m}
+                for i, t, m in zip(got["ids"], got["documents"], got["metadatas"], strict=False)
+            ]
         return [{"id": r["id"], "text": r["text"], "metadata": r["metadata"]} for r in self._mem]
 
 
 # --------------------------------------------------------------------------- #
 def _cosine(a, b) -> float:
-    dot = sum(x * y for x, y in zip(a, b, strict=False))
-    na = sum(x * x for x in a) ** 0.5 or 1.0
-    nb = sum(y * y for y in b) ** 0.5 or 1.0
+    dot = 0.0
+    na_sq = 0.0
+    nb_sq = 0.0
+    for x, y in zip(a, b, strict=False):
+        dot += x * y
+        na_sq += x * x
+        nb_sq += y * y
+    na = na_sq**0.5 or 1.0
+    nb = nb_sq**0.5 or 1.0
     return dot / (na * nb)
 
 
