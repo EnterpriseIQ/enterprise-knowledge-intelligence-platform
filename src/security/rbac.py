@@ -48,12 +48,15 @@ class RBACEngine:
     # ------------------------------------------------------------------ #
     def resolve_role(self, user_id: str | None, role: str | None) -> str:
         """Resolve an effective role from an explicit role or a known user id."""
+        if user_id and user_id in self.users:
+            user_role = self.users[user_id]["role"]
+            if role and role != user_role:
+                raise ValueError(f"User '{user_id}' cannot assume role '{role}'.")
+            return user_role
         if role:
             if role not in self.roles:
                 raise ValueError(f"Unknown role '{role}'. Valid roles: {list(self.roles)}")
             return role
-        if user_id and user_id in self.users:
-            return self.users[user_id]["role"]
         raise ValueError("Could not resolve a role: provide a valid role or known user_id.")
 
     def allowed_departments(self, role: str) -> list[str]:
