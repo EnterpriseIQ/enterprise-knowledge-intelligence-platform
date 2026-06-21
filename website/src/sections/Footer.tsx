@@ -28,7 +28,7 @@ export const Footer = () => {
             <ul className="space-y-3 text-muted-foreground">
               <li><a href="/docs" className="hover:text-white transition-colors">Documentation</a></li>
               <li><a href="/api" className="hover:text-white transition-colors">API Reference</a></li>
-              <li><a href="https://github.com/your-repo/enterprise-rag-platform" className="hover:text-white transition-colors">GitHub</a></li>
+              <li><a href="https://github.com/EnterpriseIQ/enterprise-knowledge-intelligence-platform" className="hover:text-white transition-colors">GitHub</a></li>
             </ul>
           </div>
 
@@ -47,7 +47,7 @@ export const Footer = () => {
           <div className="flex gap-4">
             <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
-            <a href="https://github.com/your-repo/enterprise-rag-platform" className="hover:text-white transition-colors">
+            <a href="https://github.com/EnterpriseIQ/enterprise-knowledge-intelligence-platform" className="hover:text-white transition-colors">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"

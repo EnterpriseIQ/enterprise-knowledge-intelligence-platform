@@ -4,8 +4,8 @@ import { useState } from 'react';
 
 export const DevExperience = () => {
   const [copied, setCopied] = useState(false);
-  const code = `git clone https://github.com/your-repo/enterprise-rag-platform.git
-cd enterprise-rag-platform
+  const code = `git clone https://github.com/EnterpriseIQ/enterprise-knowledge-intelligence-platform.git
+cd enterprise-knowledge-intelligence-platform
 
 # Generate the synthetic enterprise corpus
 python -m data.generate_data
