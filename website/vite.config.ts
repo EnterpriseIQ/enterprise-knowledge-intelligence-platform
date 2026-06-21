@@ -4,5 +4,5 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/enterprise-rag-platform/', // Required for GitHub Pages deployment
+  base: '/enterprise-knowledge-intelligence-platform/', // Required for GitHub Pages deployment
 })
