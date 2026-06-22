@@ -49,17 +49,24 @@ export const FAQ = () => {
               className="border border-white/10 rounded-xl overflow-hidden glass-card"
             >
               <button
+                id={`faq-question-${i}`}
+                aria-expanded={openIndex === i}
+                aria-controls={`faq-answer-${i}`}
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
                 className="w-full flex items-center justify-between p-6 text-left"
               >
                 <span className="font-medium text-lg">{faq.q}</span>
                 <ChevronDown
+                  aria-hidden="true"
                   className={`w-5 h-5 text-muted-foreground transition-transform duration-300 ${openIndex === i ? 'rotate-180' : ''}`}
                 />
               </button>
               <AnimatePresence>
                 {openIndex === i && (
                   <motion.div
+                    id={`faq-answer-${i}`}
+                    role="region"
+                    aria-labelledby={`faq-question-${i}`}
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
