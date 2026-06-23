@@ -47,7 +47,7 @@ export const Footer = () => {
           <div className="flex gap-4">
             <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
-            <a href="https://github.com/your-repo/enterprise-rag-platform" className="hover:text-white transition-colors">
+            <a href="https://github.com/your-repo/enterprise-rag-platform" aria-label="GitHub Repository" className="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-sm">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"

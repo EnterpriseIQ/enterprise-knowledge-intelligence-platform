@@ -22,7 +22,7 @@ export const Navigation = () => {
           </nav>
         </div>
         <div className="flex items-center gap-4">
-          <a href="https://github.com/your-repo/enterprise-rag-platform" target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-white transition-colors">
+          <a href="https://github.com/your-repo/enterprise-rag-platform" target="_blank" rel="noreferrer" aria-label="GitHub Repository" className="text-muted-foreground hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-sm">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
