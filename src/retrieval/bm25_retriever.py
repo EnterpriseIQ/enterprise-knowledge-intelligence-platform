@@ -78,9 +78,13 @@ class BM25Retriever:
         else:
             scores = self._builtin_scores(q_tokens)
 
-        ranked = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)
+        import heapq
+        # Performance Optimization: Use heapq.nlargest instead of full list sorting
+        # Reduces time complexity from O(N log N) to O(N log k), significantly improving
+        # latency for large document corpora.
+        ranked = heapq.nlargest(k, range(len(scores)), key=lambda i: scores[i])
         out = []
-        for i in ranked[:k]:
+        for i in ranked:
             if scores[i] <= 0:
                 continue
             r = self.records[i]
