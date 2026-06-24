@@ -1,0 +1,3 @@
+## 2024-06-24 - Missing ARIA attributes in custom Framer Motion accordions
+**Learning:** Custom Framer Motion accordions in this app lack native ARIA attributes (`aria-expanded`, `aria-controls`, `role="region"`) and focus styles by default. They rely on standard buttons and `<motion.div>` which need to be explicitly augmented for accessibility.
+**Action:** When working with custom animation wrappers like `AnimatePresence` and `<motion.div>` used as interactive UI elements (like accordions or dialogs), always explicitly add WAI-ARIA roles, state attributes, and keyboard focus utilities (`focus-visible`).

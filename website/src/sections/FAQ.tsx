@@ -50,16 +50,21 @@ export const FAQ = () => {
             >
               <button
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                className="w-full flex items-center justify-between p-6 text-left"
+                className="w-full flex items-center justify-between p-6 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-xl"
+                aria-expanded={openIndex === i}
+                aria-controls={`faq-content-${i}`}
               >
                 <span className="font-medium text-lg">{faq.q}</span>
                 <ChevronDown
                   className={`w-5 h-5 text-muted-foreground transition-transform duration-300 ${openIndex === i ? 'rotate-180' : ''}`}
+                  aria-hidden="true"
                 />
               </button>
               <AnimatePresence>
                 {openIndex === i && (
                   <motion.div
+                    id={`faq-content-${i}`}
+                    role="region"
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
