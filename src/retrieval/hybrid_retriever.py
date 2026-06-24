@@ -14,20 +14,19 @@ RBAC is enforced in two layers (defence in depth):
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
-
+import concurrent.futures
 import os
+from dataclasses import dataclass
 
 from src import config
 from src.retrieval.bm25_retriever import BM25Retriever
+from src.retrieval.query_expansion import QueryExpander
 from src.retrieval.query_router import RouteDecision
+from src.retrieval.reranker import CrossEncoderReranker
+from src.retrieval.rrf import reciprocal_rank_fusion
 from src.retrieval.semantic_retriever import SemanticRetriever
 from src.security.rbac import AccessDecision, RBACEngine
 from src.vectorstore import VectorStore
-
-from src.retrieval.rrf import reciprocal_rank_fusion
-from src.retrieval.reranker import CrossEncoderReranker
-from src.retrieval.query_expansion import QueryExpander
 
 
 @dataclass
@@ -97,9 +96,21 @@ class HybridRetriever:
 
         all_dense = []
         all_sparse = []
-        for q in queries:
-            all_dense.append(self.semantic.search(q, k=cand_k, where=where))
-            all_sparse.append(self.bm25.search(q, k=cand_k))
+
+        # ⚡ Bolt optimization: Parallelize dense and sparse searches across all expanded queries
+        # This significantly reduces latency when handling multiple expanded queries.
+        def _fetch(q):
+            return (
+                self.semantic.search(q, k=cand_k, where=where),
+                self.bm25.search(q, k=cand_k)
+            )
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=min(len(queries), 10)) as executor:
+            results = list(executor.map(_fetch, queries))
+
+        for dense_res, sparse_res in results:
+            all_dense.append(dense_res)
+            all_sparse.append(sparse_res)
 
         # Use RRF to fuse multi-query lists if we expanded
         if len(queries) > 1:
@@ -169,7 +180,7 @@ class HybridRetriever:
         if self.reranker and self.reranker.is_available and results:
             texts_to_rerank = [r.text for r in results]
             rerank_scores = self.reranker.rerank(request.query, texts_to_rerank)
-            rerank_norm = _minmax({r.chunk_id: s for r, s in zip(results, rerank_scores)})
+            rerank_norm = _minmax({r.chunk_id: s for r, s in zip(results, rerank_scores, strict=False)})
             for r in results:
                 # Blend reranker score and original fused score
                 # 0.7 reranker, 0.3 original
