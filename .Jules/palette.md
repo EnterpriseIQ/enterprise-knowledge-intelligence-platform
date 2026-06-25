@@ -1,0 +1,3 @@
+## 2024-06-25 - Custom Framer Motion Accordion Accessibility
+**Learning:** Custom Framer Motion components (like `AnimatePresence` and `<motion.div>`) in this codebase lack native ARIA attributes by default. When modifying or creating interactive elements like accordions, it's critical to manually wire up ARIA attributes (`aria-expanded`, `aria-controls`, `role="region"`) and keyboard focus utilities to ensure they are accessible to screen readers and keyboard users.
+**Action:** Always explicitly add WAI-ARIA roles, state attributes, and keyboard focus utilities (`focus-visible`) when building or modifying interactive components using framer-motion.
