@@ -50,7 +50,10 @@ export const FAQ = () => {
             >
               <button
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                className="w-full flex items-center justify-between p-6 text-left"
+                className="w-full flex items-center justify-between p-6 text-left rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+                aria-expanded={openIndex === i}
+                aria-controls={`faq-answer-${i}`}
+                id={`faq-button-${i}`}
               >
                 <span className="font-medium text-lg">{faq.q}</span>
                 <ChevronDown
@@ -64,6 +67,9 @@ export const FAQ = () => {
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.3 }}
+                    id={`faq-answer-${i}`}
+                    role="region"
+                    aria-labelledby={`faq-button-${i}`}
                   >
                     <div className="px-6 pb-6 text-muted-foreground leading-relaxed">
                       {faq.a}
