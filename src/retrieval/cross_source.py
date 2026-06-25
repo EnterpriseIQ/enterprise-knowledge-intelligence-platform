@@ -6,13 +6,15 @@ ensures the final context spans multiple sources/departments where relevant, so 
 cross-cutting question ("recent platform incidents") can draw on both the incident
 PDF and the operations SQL tickets rather than collapsing onto one source.
 """
+
 from __future__ import annotations
 
 from src.retrieval.hybrid_retriever import RetrievedChunk
 
 
-def diversify(chunks: list[RetrievedChunk], top_k: int,
-              max_per_doc: int = 2) -> list[RetrievedChunk]:
+def diversify(
+    chunks: list[RetrievedChunk], top_k: int, max_per_doc: int = 2
+) -> list[RetrievedChunk]:
     """Greedy selection that caps how many chunks come from any single document,
     promoting source diversity while preserving the fused ranking order."""
     selected: list[RetrievedChunk] = []
@@ -27,9 +29,12 @@ def diversify(chunks: list[RetrievedChunk], top_k: int,
             break
     # If capping left us short, top up with the remaining best chunks.
     if len(selected) < top_k:
+        # Optimization: Use a set for O(1) membership lookups to avoid O(N*M) list checks.
+        selected_set = {id(c) for c in selected}
         for c in chunks:
-            if c not in selected:
+            if id(c) not in selected_set:
                 selected.append(c)
+                selected_set.add(id(c))
             if len(selected) >= top_k:
                 break
     return selected
@@ -44,5 +49,8 @@ def source_coverage(chunks: list[RetrievedChunk]) -> dict:
         s = c.metadata.get("source_type", "?")
         depts[d] = depts.get(d, 0) + 1
         sources[s] = sources.get(s, 0) + 1
-    return {"departments": depts, "source_types": sources,
-            "is_cross_source": len(sources) > 1 or len(depts) > 1}
+    return {
+        "departments": depts,
+        "source_types": sources,
+        "is_cross_source": len(sources) > 1 or len(depts) > 1,
+    }
