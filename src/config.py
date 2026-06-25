@@ -7,6 +7,7 @@ which keeps the platform twelve-factor friendly for containerised deployment.
 
 from __future__ import annotations
 
+import secrets
 from os import getenv
 from pathlib import Path
 
@@ -25,7 +26,7 @@ except Exception:  # pragma: no cover - dotenv is optional
 # --------------------------------------------------------------------------- #
 # Security
 # --------------------------------------------------------------------------- #
-API_KEY = getenv("ERAG_API_KEY", "dev-secret-key")
+API_KEY = getenv("ERAG_API_KEY", secrets.token_hex(32))
 
 # --------------------------------------------------------------------------- #
 # Paths
