@@ -1,48 +1,108 @@
-import { motion } from 'framer-motion';
-import { Button } from '../components/Button';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X, ArrowRight, Github } from 'lucide-react';
+import { Button } from '../components/ui/button';
+import { cn } from '../lib/utils';
 
-export const Navigation = () => {
+export function Navigation() {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const navLinks = [
+    { name: 'Features', href: '#features' },
+    { name: 'Architecture', href: '#architecture' },
+    { name: 'Enterprise', href: '#enterprise' },
+    { name: 'Docs', href: '#docs' },
+  ];
+
   return (
-    <motion.header
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/5"
+    <header
+      className={cn(
+        'fixed top-0 w-full z-50 transition-all duration-300 border-b border-transparent',
+        isScrolled ? 'bg-background/80 backdrop-blur-md border-border shadow-sm' : 'bg-transparent'
+      )}
     >
-      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-8">
-          <a href="/" className="font-semibold text-lg tracking-tight flex items-center gap-2">
-            <div className="w-5 h-5 rounded-[4px] bg-white text-black flex items-center justify-center text-xs font-bold">K</div>
-            Kortex
-          </a>
-          <nav className="hidden md:flex gap-6 text-sm text-muted-foreground">
-            <a href="#features" className="hover:text-white transition-colors">Features</a>
-            <a href="#architecture" className="hover:text-white transition-colors">Architecture</a>
-            <a href="#security" className="hover:text-white transition-colors">Security</a>
-            <a href="/docs" className="hover:text-white transition-colors">Docs</a>
-          </nav>
+      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded bg-primary text-primary-foreground flex items-center justify-center font-bold text-xl">
+            K
+          </div>
+          <span className="font-bold text-lg tracking-tight">EnterpriseIq</span>
         </div>
-        <div className="flex items-center gap-4">
-          <a href="https://github.com/your-repo/enterprise-rag-platform" target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-white transition-colors">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="w-5 h-5"
+
+        {/* Desktop Nav */}
+        <nav className="hidden md:flex items-center gap-8">
+          {navLinks.map((link) => (
+            <a
+              key={link.name}
+              href={link.href}
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
             >
-              <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-              <path d="M9 18c-4.51 2-5-2-7-2" />
-            </svg>
-          </a>
-          <Button variant="outline" size="sm" className="hidden sm:inline-flex">View on GitHub</Button>
-          <Button size="sm">Deploy Locally</Button>
+              {link.name}
+            </a>
+          ))}
+        </nav>
+
+        <div className="hidden md:flex items-center gap-4">
+          <Button variant="ghost" size="sm" className="gap-2">
+            <Github className="w-4 h-4" />
+            Star on GitHub
+          </Button>
+          <Button size="sm" className="gap-2">
+            Get Started
+            <ArrowRight className="w-4 h-4" />
+          </Button>
         </div>
+
+        {/* Mobile Toggle */}
+        <button
+          className="md:hidden p-2 text-muted-foreground hover:text-foreground"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen ? <X /> : <Menu />}
+        </button>
       </div>
-    </motion.header>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="absolute top-16 left-0 w-full bg-background border-b border-border shadow-lg md:hidden flex flex-col p-4 gap-4"
+          >
+            {navLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.href}
+                className="text-sm font-medium text-foreground py-2"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {link.name}
+              </a>
+            ))}
+            <div className="flex flex-col gap-2 pt-4 border-t border-border">
+              <Button variant="outline" className="w-full justify-start gap-2">
+                <Github className="w-4 h-4" />
+                GitHub
+              </Button>
+              <Button className="w-full justify-start gap-2">
+                Get Started
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
   );
-};
+}

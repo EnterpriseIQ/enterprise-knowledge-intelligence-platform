@@ -1,103 +1,91 @@
+
 import { motion } from 'framer-motion';
-import { Search, ShieldCheck, Link, Database, WifiOff, Route, List, Terminal } from 'lucide-react';
+import { Database, Search, Shield, Zap, Workflow, Cpu } from 'lucide-react';
+import { Card, CardHeader, CardTitle, CardDescription } from '../components/ui/card';
 
-const features = [
-  {
-    icon: <Search className="w-5 h-5" />,
-    title: "Hybrid Retrieval Engine",
-    description: "Min-max fused dense vectors and BM25 sparse search finds exact matches alongside semantic intent.",
-    className: "md:col-span-2 md:row-span-2",
-  },
-  {
-    icon: <ShieldCheck className="w-5 h-5" />,
-    title: "Defence-in-Depth RBAC",
-    description: "Document-level access control enforced before and after retrieval.",
-    className: "md:col-span-1",
-  },
-  {
-    icon: <Link className="w-5 h-5" />,
-    title: "Verifiable Citations",
-    description: "Every generated answer includes exact document and snippet links.",
-    className: "md:col-span-1",
-  },
-  {
-    icon: <Database className="w-5 h-5" />,
-    title: "Universal Ingestion",
-    description: "Unified processing for PDFs, CSVs, SQL, and JSON logs into a single graph.",
-    className: "md:col-span-2",
-  },
-  {
-    icon: <WifiOff className="w-5 h-5" />,
-    title: "Offline-First Resilience",
-    description: "Runs entirely offline with graceful fallbacks. Zero cloud APIs required.",
-    className: "md:col-span-1",
-  },
-  {
-    icon: <Route className="w-5 h-5" />,
-    title: "Intent Routing",
-    description: "Transparent classifier boosts relevant departments automatically.",
-    className: "md:col-span-1",
-  },
-  {
-    icon: <List className="w-5 h-5" />,
-    title: "Comprehensive Audit",
-    description: "Every access decision and generation is logged and explainable.",
-    className: "md:col-span-1",
-  },
-  {
-    icon: <Terminal className="w-5 h-5" />,
-    title: "Developer-Ready",
-    description: "Deploys instantly via Docker, with a typed FastAPI backend.",
-    className: "md:col-span-1",
-  }
-];
+export function Features() {
+  const features = [
+    {
+      icon: Search,
+      title: "Hybrid Search Architecture",
+      desc: "Combines dense vectors (embeddings) with sparse keyword search (BM25) for unparalleled retrieval precision."
+    },
+    {
+      icon: Shield,
+      title: "Identity-Aware Retrieval",
+      desc: "Deep integration with your IdP ensures granular RBAC filtering happens before LLM generation."
+    },
+    {
+      icon: Workflow,
+      title: "Agentic Workflows",
+      desc: "LangGraph-powered multi-agent orchestration for complex multi-step reasoning and tool use."
+    },
+    {
+      icon: Database,
+      title: "Universal Connectors",
+      desc: "Native integrations for structured (Postgres, Snowflake) and unstructured (Confluence, Notion) data."
+    },
+    {
+      icon: Cpu,
+      title: "Local LLM Support",
+      desc: "Run completely offline with local models (Qwen, Llama 3) for highly sensitive air-gapped environments."
+    },
+    {
+      icon: Zap,
+      title: "Cross-Encoder Reranking",
+      desc: "Second-stage reranking model instantly surfaces the most contextually relevant chunks."
+    }
+  ];
 
-export const Features = () => {
   return (
-    <section className="py-24 bg-background" id="features">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
+    <section id="features" className="py-24 relative overflow-hidden">
+      <div className="container px-4 mx-auto">
+        <div className="text-center max-w-3xl mx-auto mb-16">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-5xl font-semibold tracking-tight mb-4"
+            className="text-3xl md:text-5xl font-bold tracking-tight mb-4"
           >
-            Engineered for absolute trust.
+            Engineering Excellence, <br/><span className="text-muted-foreground">Built-In.</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-lg text-muted-foreground max-w-2xl mx-auto"
+            className="text-lg text-muted-foreground"
           >
-            A cohesive platform bridging state-of-the-art retrieval with enterprise-grade governance.
+            A comprehensive suite of tools designed for production-grade enterprise intelligence.
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 auto-rows-[200px] gap-4">
-          {features.map((feature, i) => (
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {features.map((feature, index) => (
             <motion.div
-              key={i}
+              key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.05 }}
-              className={`glass-card p-6 rounded-2xl flex flex-col justify-between group overflow-hidden relative ${feature.className}`}
+              transition={{ delay: index * 0.1 }}
+              whileHover={{ y: -5 }}
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="relative z-10">
-                <div className="mb-4 bg-white/5 w-10 h-10 rounded-lg flex items-center justify-center text-white/80 group-hover:text-white transition-colors border border-white/10 group-hover:border-white/20">
-                  {feature.icon}
-                </div>
-                <h3 className="text-lg font-semibold text-white mb-2">{feature.title}</h3>
-                <p className="text-sm text-muted-foreground">{feature.description}</p>
-              </div>
+              <Card className="h-full bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/50 transition-colors cursor-default group overflow-hidden relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <CardHeader>
+                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <feature.icon className="w-6 h-6 text-primary" />
+                  </div>
+                  <CardTitle className="text-xl">{feature.title}</CardTitle>
+                  <CardDescription className="text-base mt-2 leading-relaxed">
+                    {feature.desc}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
             </motion.div>
           ))}
         </div>
       </div>
     </section>
   );
-};
+}
