@@ -27,9 +27,14 @@ def diversify(chunks: list[RetrievedChunk], top_k: int,
             break
     # If capping left us short, top up with the remaining best chunks.
     if len(selected) < top_k:
+        # Bolt Optimization: Use a set for O(1) lookups instead of O(n) list check
+        # This replaces an O(n²) nested loop with an O(n) approach.
+        # We use chunk_id for membership to ensure value-equivalent chunks are deduplicated correctly.
+        selected_ids = {c.chunk_id for c in selected}
         for c in chunks:
-            if c not in selected:
+            if c.chunk_id not in selected_ids:
                 selected.append(c)
+                selected_ids.add(c.chunk_id)
             if len(selected) >= top_k:
                 break
     return selected
