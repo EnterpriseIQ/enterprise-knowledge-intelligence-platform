@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://your-repo.github.io/enterprise-rag-platform/sitemap.xml
+Sitemap: https://enterpriseiq.github.io/enterprise-knowledge-intelligence-platform/sitemap.xml
