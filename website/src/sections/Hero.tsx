@@ -16,7 +16,7 @@ export function Hero() {
         >
           <Badge variant="secondary" className="rounded-full px-4 py-1 border border-border/50 bg-secondary/50 backdrop-blur-sm">
             <span className="flex h-2 w-2 rounded-full bg-primary mr-2 animate-pulse"></span>
-            KnowledgeX 2.0 is now available
+            EnterpriseIq 2.0 is now available
           </Badge>
         </motion.div>
 
@@ -72,7 +72,7 @@ export function Hero() {
           </div>
           <div className="p-6 pt-16 h-[400px] flex items-center justify-center text-muted-foreground font-mono text-sm bg-gradient-to-b from-transparent to-background/50">
             <div className="text-left w-full max-w-2xl space-y-4">
-              <p className="text-primary/70">$ Initialize KnowledgeX Platform...</p>
+              <p className="text-primary/70">$ Initialize EnterpriseIq...</p>
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}

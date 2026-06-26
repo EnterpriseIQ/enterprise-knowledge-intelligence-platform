@@ -56,7 +56,7 @@ export function ProblemSolution() {
           >
             <div className="absolute inset-0 bg-primary/5 rounded-[2rem] -rotate-3 scale-105 blur-xl -z-10"></div>
             <Card className="border-primary/20 bg-card/80 backdrop-blur-xl shadow-2xl p-8 rounded-[2rem]">
-              <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-8 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">The KnowledgeX Standard</h2>
+              <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-8 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">The EnterpriseIq Standard</h2>
 
               <div className="space-y-6">
                 {solutions.map((item, i) => (

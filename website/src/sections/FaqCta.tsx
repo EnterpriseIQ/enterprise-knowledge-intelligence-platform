@@ -8,8 +8,8 @@ export function FaqCta() {
   const faqs = [
     {
       id: "1",
-      title: "Does KnowledgeX support air-gapped environments?",
-      content: "Yes. KnowledgeX is designed for strict enterprise security requirements. You can deploy the entire platform, including local LLMs like Llama 3 or Qwen, entirely offline within your VPC."
+      title: "Does EnterpriseIq support air-gapped environments?",
+      content: "Yes. EnterpriseIq is designed for strict enterprise security requirements. You can deploy the entire platform, including local LLMs like Llama 3 or Qwen, entirely offline within your VPC."
     },
     {
       id: "2",
@@ -19,7 +19,7 @@ export function FaqCta() {
     {
       id: "3",
       title: "What is the difference between dense vector search and hybrid search?",
-      content: "Dense vector search captures semantic meaning, but struggles with exact keywords (like IDs or product names). KnowledgeX uses Hybrid Search, combining dense vectors with sparse BM25 keyword search, and reranks them with a Cross-Encoder for maximum accuracy."
+      content: "Dense vector search captures semantic meaning, but struggles with exact keywords (like IDs or product names). EnterpriseIq uses Hybrid Search, combining dense vectors with sparse BM25 keyword search, and reranks them with a Cross-Encoder for maximum accuracy."
     },
     {
       id: "4",
@@ -53,7 +53,7 @@ export function FaqCta() {
           >
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">Ready to scale your enterprise AI?</h2>
             <p className="text-xl text-muted-foreground mb-10">
-              Join industry leaders building secure, reliable, and high-performance agentic workflows.
+              Build secure, reliable, and high-performance agentic workflows.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="gap-2 rounded-full h-12 px-8 text-base shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]">

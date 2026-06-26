@@ -4,8 +4,8 @@ import { Github, Twitter, Linkedin } from 'lucide-react';
 export function Footer() {
   const links = {
     Product: ['Features', 'Architecture', 'Security', 'Enterprise', 'Pricing'],
-    Resources: ['Documentation', 'API Reference', 'Blog', 'Case Studies', 'Community'],
-    Company: ['About', 'Careers', 'Contact', 'Partners', 'Legal']
+    Resources: ['Documentation', 'API Reference', 'Blog', 'Community'],
+    Company: ['About', 'Careers', 'Contact', 'Legal']
   };
 
   return (
@@ -15,7 +15,7 @@ export function Footer() {
           <div className="col-span-2 lg:col-span-2">
             <div className="flex items-center gap-2 mb-6">
               <div className="w-8 h-8 rounded bg-primary text-primary-foreground flex items-center justify-center font-bold text-xl">
-                K
+                E
               </div>
               <span className="font-bold text-lg tracking-tight">EnterpriseIq</span>
             </div>
@@ -46,7 +46,7 @@ export function Footer() {
         </div>
 
         <div className="pt-8 border-t border-border/50 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} EnterpriseIq (KnowledgeX Platform). All rights reserved.</p>
+          <p>© {new Date().getFullYear()} EnterpriseIq. All rights reserved.</p>
           <div className="flex gap-6">
             <a href="#" className="hover:text-foreground transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-foreground transition-colors">Terms of Service</a>
