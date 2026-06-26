@@ -49,8 +49,11 @@ export const FAQ = () => {
               className="border border-white/10 rounded-xl overflow-hidden glass-card"
             >
               <button
+                id={`faq-button-${i}`}
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                className="w-full flex items-center justify-between p-6 text-left"
+                aria-expanded={openIndex === i}
+                aria-controls={`faq-content-${i}`}
+                className="w-full flex items-center justify-between p-6 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-xl"
               >
                 <span className="font-medium text-lg">{faq.q}</span>
                 <ChevronDown
@@ -60,6 +63,9 @@ export const FAQ = () => {
               <AnimatePresence>
                 {openIndex === i && (
                   <motion.div
+                    id={`faq-content-${i}`}
+                    role="region"
+                    aria-labelledby={`faq-button-${i}`}
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
