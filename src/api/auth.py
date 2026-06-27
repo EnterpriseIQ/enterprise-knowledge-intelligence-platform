@@ -1,6 +1,8 @@
 import secrets
-from fastapi import Security, HTTPException, status
+
+from fastapi import HTTPException, Security, status
 from fastapi.security import APIKeyHeader
+
 from src import config
 
 api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)

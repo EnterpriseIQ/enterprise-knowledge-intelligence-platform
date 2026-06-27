@@ -1,8 +1,9 @@
 import os
-from typing import Optional
 
 from src.retrieval.hybrid_retriever import RetrievedChunk
+
 from .base import GenerationProvider
+
 
 class GeminiProvider(GenerationProvider):
     def __init__(self, model_name: str = "gemini-1.5-pro"):
@@ -25,7 +26,7 @@ class GeminiProvider(GenerationProvider):
     def is_available(self) -> bool:
         return self._client is not None
 
-    def generate(self, query: str, chunks: list[RetrievedChunk], system_prompt: str) -> Optional[str]:
+    def generate(self, query: str, chunks: list[RetrievedChunk], system_prompt: str) -> str | None:
         if not self.is_available():
             return None
 

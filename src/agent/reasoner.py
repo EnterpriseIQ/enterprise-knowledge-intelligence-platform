@@ -1,6 +1,7 @@
 from src.agent.state import AgentState
 from src.generation.confidence import score_confidence
 
+
 def reason_step(state: AgentState) -> AgentState:
     """The Reasoning Agent decides if we have enough information to answer."""
     chunks = state.get("retrieved_chunks", [])

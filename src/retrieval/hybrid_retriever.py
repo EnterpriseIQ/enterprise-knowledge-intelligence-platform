@@ -14,20 +14,18 @@ RBAC is enforced in two layers (defence in depth):
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
-
 import os
+from dataclasses import dataclass
 
 from src import config
 from src.retrieval.bm25_retriever import BM25Retriever
+from src.retrieval.query_expansion import QueryExpander
 from src.retrieval.query_router import RouteDecision
+from src.retrieval.reranker import CrossEncoderReranker
+from src.retrieval.rrf import reciprocal_rank_fusion
 from src.retrieval.semantic_retriever import SemanticRetriever
 from src.security.rbac import AccessDecision, RBACEngine
 from src.vectorstore import VectorStore
-
-from src.retrieval.rrf import reciprocal_rank_fusion
-from src.retrieval.reranker import CrossEncoderReranker
-from src.retrieval.query_expansion import QueryExpander
 
 
 @dataclass

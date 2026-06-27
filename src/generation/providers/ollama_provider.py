@@ -1,9 +1,11 @@
 import os
+
 import requests
-from typing import Optional
 
 from src.retrieval.hybrid_retriever import RetrievedChunk
+
 from .base import GenerationProvider
+
 
 class OllamaProvider(GenerationProvider):
     def __init__(self, model_name: str = "llama3"):
@@ -19,7 +21,7 @@ class OllamaProvider(GenerationProvider):
         # but available during query.
         return True
 
-    def generate(self, query: str, chunks: list[RetrievedChunk], system_prompt: str) -> Optional[str]:
+    def generate(self, query: str, chunks: list[RetrievedChunk], system_prompt: str) -> str | None:
         context = "\n\n".join(
             f"[{i}] (source: {c.metadata.get('title')}, {c.metadata.get('department')}) "
             f"{c.text}" for i, c in enumerate(chunks, start=1)

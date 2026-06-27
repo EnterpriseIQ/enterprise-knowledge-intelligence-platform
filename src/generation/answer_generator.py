@@ -35,15 +35,15 @@ from __future__ import annotations
 
 import os
 
-from src.retrieval.hybrid_retriever import RetrievedChunk
 from src.generation.providers import (
-    GenerationProvider,
-    ExtractiveProvider,
     AnthropicProvider,
-    OpenAIProvider,
+    ExtractiveProvider,
     GeminiProvider,
+    GenerationProvider,
     OllamaProvider,
+    OpenAIProvider,
 )
+from src.retrieval.hybrid_retriever import RetrievedChunk
 
 _REFUSAL = ("I could not find sufficient authorised evidence to answer this "
             "question confidently. Please refine the question or check that you "

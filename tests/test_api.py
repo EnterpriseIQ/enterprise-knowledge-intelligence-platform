@@ -4,9 +4,8 @@ from __future__ import annotations
 from fastapi.testclient import TestClient
 
 from src.api.main import app
-
-
 from src.config import API_KEY
+
 
 def test_health_and_query_flow():
     with TestClient(app) as client:

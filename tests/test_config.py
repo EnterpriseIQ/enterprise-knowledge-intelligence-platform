@@ -1,8 +1,9 @@
-import sys
 import importlib
+import sys
 from unittest.mock import MagicMock, patch
 
 import src.config
+
 
 def test_dotenv_success():
     """Test that load_dotenv is called correctly when dotenv is installed."""

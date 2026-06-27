@@ -1,7 +1,7 @@
 import time
-import os
 
 from src.retrieval.bm25_retriever import BM25Retriever
+
 
 def run_benchmark():
     records = []

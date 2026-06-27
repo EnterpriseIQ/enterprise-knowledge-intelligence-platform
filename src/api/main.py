@@ -14,13 +14,13 @@ from __future__ import annotations
 import asyncio
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from prometheus_client import make_asgi_app, Counter, Histogram
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+from prometheus_client import Counter, Histogram, make_asgi_app
 
-from src.api.models import QueryRequest, QueryResponse
 from src.api.auth import get_api_key
+from src.api.models import QueryRequest, QueryResponse
 from src.pipeline import RAGPipeline
 
 _state: dict = {}
@@ -56,8 +56,8 @@ app = FastAPI(
 # Configure CORS Middleware securely
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[],
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )

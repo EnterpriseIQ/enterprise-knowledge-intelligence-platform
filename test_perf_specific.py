@@ -1,9 +1,7 @@
-import time
-import os
 import random
+import time
 import uuid
 
-from src.retrieval.hybrid_retriever import HybridRetriever
 from src.retrieval.rrf import reciprocal_rank_fusion
 
 # We just want to measure the specific code section.

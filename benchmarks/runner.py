@@ -1,6 +1,8 @@
 import time
+
+from evaluation.metrics import mrr_at_k, ndcg_at_k, precision_at_k, recall_at_k
 from src.pipeline import RAGPipeline
-from evaluation.metrics import precision_at_k, recall_at_k, mrr_at_k, ndcg_at_k
+
 
 def run_benchmarks():
     pipeline = RAGPipeline()

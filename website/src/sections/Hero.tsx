@@ -12,11 +12,11 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="mb-6"
+          className="mt-8 mb-6"
         >
-          <Badge variant="secondary" className="rounded-full px-4 py-1 border border-border/50 bg-secondary/50 backdrop-blur-sm">
+          <Badge variant="secondary" className="rounded-full px-4 py-1 border border-border/50 bg-secondary/50 backdrop-blur-sm shadow-sm">
             <span className="flex h-2 w-2 rounded-full bg-primary mr-2 animate-pulse"></span>
-            EnterpriseIq 2.0 is now available
+            EnterpriseIQ 2.0 is now available
           </Badge>
         </motion.div>
 
@@ -24,7 +24,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-          className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight max-w-4xl bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70"
+          className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight max-w-4xl bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/90"
         >
           The Enterprise Knowledge Intelligence Platform
         </motion.h1>
@@ -33,7 +33,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-          className="mt-6 text-xl text-muted-foreground max-w-2xl leading-relaxed"
+          className="mt-6 text-xl tracking-tight text-muted-foreground max-w-2xl leading-relaxed"
         >
           Securely search, analyze, and automate your enterprise structured and unstructured data with agentic RAG and hybrid retrieval.
         </motion.p>

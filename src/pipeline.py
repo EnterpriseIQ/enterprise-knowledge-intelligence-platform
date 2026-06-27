@@ -14,6 +14,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from src import config
+from src.agent.graph import AgenticRAG
 from src.generation.answer_generator import GroundedAnswerGenerator
 from src.generation.citation import build_citations
 from src.generation.confidence import score_confidence
@@ -24,7 +25,6 @@ from src.retrieval.hybrid_retriever import HybridRetriever, RetrievalRequest
 from src.retrieval.query_router import QueryRouter
 from src.security import AuditLogger, RBACEngine
 from src.vectorstore import VectorStore
-from src.agent.graph import AgenticRAG
 
 
 @dataclass
@@ -74,6 +74,17 @@ class RAGPipeline:
 
     # ------------------------------------------------------------------ #
     def build_index(self) -> dict:
+        """
+        Ingest the configured corpus and build the hybrid retrieval index.
+
+        This method coordinates loading the synthetic corpus, chunking documents
+        semantically, generating embeddings, and storing them in the active
+        VectorStore alongside building the pure-Python BM25 inverted index.
+
+        Returns:
+            dict: Statistical summary containing document count, chunk count,
+                and active backend provider names (e.g., ChromaDB, sentence-transformers).
+        """
         docs = load_corpus()
         chunks = chunk_documents(docs)
         if chunks:
@@ -95,6 +106,24 @@ class RAGPipeline:
     # ------------------------------------------------------------------ #
     def agentic_query(self, query: str, role: str | None = None, user_id: str = "",
                       top_k: int | None = None) -> QueryResult:
+        """
+        Execute a query using the LangGraph-powered Agentic workflow.
+
+        Unlike the standard `query` method which follows a strict linear path,
+        this method delegates execution to an orchestrating agent that can
+        plan multiple retrieval steps, synthesize data, and reason about the
+        user's intent before providing an answer.
+
+        Args:
+            query (str): The user's question or instruction.
+            role (str | None): The user's enterprise role (e.g., 'HR', 'Engineering').
+            user_id (str): Unique identifier for audit logging.
+            top_k (int | None): Maximum number of chunks to retrieve (default: 5).
+
+        Returns:
+            QueryResult: The structured response containing the generated answer,
+                citations, routing data, and RBAC metrics.
+        """
         if not self._indexed:
             self.build_index()
 
@@ -136,6 +165,24 @@ class RAGPipeline:
     # ------------------------------------------------------------------ #
     def query(self, query: str, role: str | None = None, user_id: str = "",
               top_k: int | None = None) -> QueryResult:
+        """
+        Execute a standard, highly-optimized linear RAG query.
+
+        This method performs intent routing, hybrid retrieval (dense + sparse fusion),
+        cross-encoder reranking, and zero-trust RBAC filtering in a single,
+        low-latency pass. It ensures the generated answer is strictly grounded in
+        the provided context.
+
+        Args:
+            query (str): The user's question.
+            role (str | None): The user's enterprise role for RBAC evaluation.
+            user_id (str): Unique identifier for audit logging.
+            top_k (int | None): Maximum number of chunks to retrieve.
+
+        Returns:
+            QueryResult: The structured response containing the generated answer,
+                citations, confidence scores, and detailed RBAC audit decisions.
+        """
         if not self._indexed:
             self.build_index()
 

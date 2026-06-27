@@ -1,8 +1,8 @@
 import re
-from typing import Optional
 
 from src.generation.confidence import _terms
 from src.retrieval.hybrid_retriever import RetrievedChunk
+
 from .base import GenerationProvider
 
 _SENT_SPLIT = re.compile(r"(?<=[.!?])\s+")
@@ -20,7 +20,7 @@ class ExtractiveProvider(GenerationProvider):
     def name(self) -> str:
         return "extractive"
 
-    def generate(self, query: str, chunks: list[RetrievedChunk], system_prompt: str) -> Optional[str]:
+    def generate(self, query: str, chunks: list[RetrievedChunk], system_prompt: str) -> str | None:
         q_terms = _terms(query)
         scored: list[tuple[float, int, str]] = []  # (relevance, citation_marker, sentence)
         for marker, chunk in enumerate(chunks, start=1):

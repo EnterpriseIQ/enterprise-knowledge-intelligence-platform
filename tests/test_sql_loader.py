@@ -1,7 +1,9 @@
 import sqlite3
+
 import pytest
-from pathlib import Path
+
 from src.ingestion.sql_loader import load_sql
+
 
 @pytest.fixture
 def sample_db(tmp_path):

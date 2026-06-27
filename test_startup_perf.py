@@ -1,6 +1,8 @@
 import asyncio
 import time
-from src.api.main import lifespan, app
+
+from src.api.main import app, lifespan
+
 
 async def background_task():
     # If the event loop is blocked, this task won't even be able to start

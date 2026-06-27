@@ -14,6 +14,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from src import config
+from src.agent.graph import AgenticRAG
 from src.generation.answer_generator import GroundedAnswerGenerator
 from src.generation.citation import build_citations
 from src.generation.confidence import score_confidence
@@ -24,7 +25,6 @@ from src.retrieval.hybrid_retriever import HybridRetriever
 from src.retrieval.query_router import QueryRouter
 from src.security import AuditLogger, RBACEngine
 from src.vectorstore import VectorStore
-from src.agent.graph import AgenticRAG
 
 
 @dataclass

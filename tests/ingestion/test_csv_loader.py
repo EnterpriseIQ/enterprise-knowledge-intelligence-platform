@@ -1,5 +1,7 @@
 from pathlib import Path
+
 from src.ingestion.csv_loader import load_csv
+
 
 def test_load_csv_happy_path(tmp_path: Path):
     """Test loading a standard CSV file."""

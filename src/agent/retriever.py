@@ -2,6 +2,7 @@ from src.agent.state import AgentState
 from src.retrieval.cross_source import diversify
 from src.retrieval.hybrid_retriever import RetrievalRequest
 
+
 class RetrievalAgent:
     def __init__(self, pipeline):
         """Initialise with a reference to the main RAGPipeline to re-use routing/hybrid ret."""

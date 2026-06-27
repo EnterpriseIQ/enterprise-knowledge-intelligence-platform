@@ -1,5 +1,6 @@
 import math
 
+
 def precision_at_k(retrieved_ids: list[str], relevant_ids: set[str], k: int) -> float:
     retrieved_k = retrieved_ids[:k]
     if not retrieved_k:

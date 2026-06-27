@@ -1,11 +1,8 @@
 import time
-import os
 
-from src.vectorstore import VectorStore
-from src.security.rbac import RBACEngine
-from src.retrieval.hybrid_retriever import HybridRetriever
 from src.pipeline import RAGPipeline
 from src.retrieval.query_expansion import QueryExpander
+
 
 class MockExpander(QueryExpander):
     def expand(self, query):
