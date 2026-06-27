@@ -31,23 +31,26 @@ provider-independent, so swapping the generator changes nothing else.
   call in ``_generate_llm`` for that provider's SDK/HTTP endpoint and selecting it
   via configuration. No change to the rest of the pipeline is required.
 """
+
 from __future__ import annotations
 
 import os
 
-from src.retrieval.hybrid_retriever import RetrievedChunk
 from src.generation.providers import (
-    GenerationProvider,
-    ExtractiveProvider,
     AnthropicProvider,
-    OpenAIProvider,
+    ExtractiveProvider,
     GeminiProvider,
+    GenerationProvider,
     OllamaProvider,
+    OpenAIProvider,
 )
+from src.retrieval.hybrid_retriever import RetrievedChunk
 
-_REFUSAL = ("I could not find sufficient authorised evidence to answer this "
-            "question confidently. Please refine the question or check that you "
-            "have access to the relevant documents.")
+_REFUSAL = (
+    "I could not find sufficient authorised evidence to answer this "
+    "question confidently. Please refine the question or check that you "
+    "have access to the relevant documents."
+)
 
 _SYSTEM_PROMPT = (
     "You are an enterprise knowledge assistant. Answer the user's question using "
@@ -81,13 +84,14 @@ class GroundedAnswerGenerator:
         elif provider_name == "ollama":
             provider = OllamaProvider()
 
-        if provider and getattr(provider, 'is_available', lambda: True)():
+        if provider and getattr(provider, "is_available", lambda: True)():
             self.provider = provider
             self.backend = provider.name
 
     # ------------------------------------------------------------------ #
-    def generate(self, query: str, chunks: list[RetrievedChunk],
-                 confidence: dict, max_sentences: int = 4) -> str:
+    def generate(
+        self, query: str, chunks: list[RetrievedChunk], confidence: dict, max_sentences: int = 4
+    ) -> str:
         # Confidence gating applies to BOTH backends: low evidence => refuse, never
         # guess. This is the core hallucination guardrail.
         if not chunks or confidence.get("label") in ("none", "low"):
@@ -111,6 +115,8 @@ class GroundedAnswerGenerator:
     @staticmethod
     def _annotate(answer: str, confidence: dict) -> str:
         if answer != _REFUSAL and confidence.get("label") == "medium":
-            answer += ("\n\nNote: confidence is moderate — the answer is grounded in the "
-                       "cited sources but you may wish to verify against the originals.")
+            answer += (
+                "\n\nNote: confidence is moderate — the answer is grounded in the "
+                "cited sources but you may wish to verify against the originals."
+            )
         return answer

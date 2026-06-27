@@ -1,11 +1,13 @@
 import math
 
+
 def precision_at_k(retrieved_ids: list[str], relevant_ids: set[str], k: int) -> float:
     retrieved_k = retrieved_ids[:k]
     if not retrieved_k:
         return 0.0
     relevant_retrieved = sum(1 for doc_id in retrieved_k if doc_id in relevant_ids)
     return relevant_retrieved / len(retrieved_k)
+
 
 def recall_at_k(retrieved_ids: list[str], relevant_ids: set[str], k: int) -> float:
     if not relevant_ids:
@@ -14,11 +16,13 @@ def recall_at_k(retrieved_ids: list[str], relevant_ids: set[str], k: int) -> flo
     relevant_retrieved = sum(1 for doc_id in retrieved_k if doc_id in relevant_ids)
     return relevant_retrieved / len(relevant_ids)
 
+
 def mrr_at_k(retrieved_ids: list[str], relevant_ids: set[str], k: int) -> float:
     for rank, doc_id in enumerate(retrieved_ids[:k], start=1):
         if doc_id in relevant_ids:
             return 1.0 / rank
     return 0.0
+
 
 def ndcg_at_k(retrieved_ids: list[str], relevant_ids: set[str], k: int) -> float:
     dcg = 0.0
@@ -33,6 +37,7 @@ def ndcg_at_k(retrieved_ids: list[str], relevant_ids: set[str], k: int) -> float
     if idcg == 0.0:
         return 0.0
     return dcg / idcg
+
 
 def calculate_groundedness(answer: str, retrieved_chunks: list[dict]) -> float:
     """A minimal heuristic: grounded if it contains citation markers mapped to chunks."""

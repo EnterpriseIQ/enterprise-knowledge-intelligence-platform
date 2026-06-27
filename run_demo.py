@@ -7,6 +7,7 @@ confidence — all without starting the web server.
 
     python run_demo.py
 """
+
 from __future__ import annotations
 
 import sys
@@ -30,10 +31,28 @@ DEMO_QUERIES = [
 RBAC_SCENARIOS = [
     ("HR reads HR content", "What is the leave policy?", "HR", "HR", None),
     ("HR blocked from Finance", "Show finance budget allocations.", "HR", None, "Finance"),
-    ("Finance reads Finance content", "Show finance budget allocations.", "Finance", "Finance", None),
+    (
+        "Finance reads Finance content",
+        "Show finance budget allocations.",
+        "Finance",
+        "Finance",
+        None,
+    ),
     ("Finance blocked from HR", "What is the remote work policy?", "Finance", None, "HR"),
-    ("Engineering reads Engineering content", "Show deployment standards.", "Engineering", "Engineering", None),
-    ("Engineering blocked from Finance", "Show finance budget allocations.", "Engineering", None, "Finance"),
+    (
+        "Engineering reads Engineering content",
+        "Show deployment standards.",
+        "Engineering",
+        "Engineering",
+        None,
+    ),
+    (
+        "Engineering blocked from Finance",
+        "Show finance budget allocations.",
+        "Engineering",
+        None,
+        "Finance",
+    ),
 ]
 
 BAR = "=" * 78
@@ -41,16 +60,20 @@ BAR = "=" * 78
 
 def show(result) -> None:
     print(f"\nQ ({result.role}): {result.query}")
-    print(f"Confidence: {result.confidence['label']} ({result.confidence['score']}) "
-          f"| {result.confidence['explanation']}")
+    print(
+        f"Confidence: {result.confidence['label']} ({result.confidence['score']}) "
+        f"| {result.confidence['explanation']}"
+    )
     print(f"Routing: {result.route['rationale']}")
     print(f"Answer:\n  {result.answer}")
     if result.citations:
         print("Citations:")
         for c in result.citations:
             print(f"  {c['reference']}")
-    print(f"Access: {result.authorised_count} authorised / {result.denied_count} denied; "
-          f"coverage={result.coverage['source_types']}")
+    print(
+        f"Access: {result.authorised_count} authorised / {result.denied_count} denied; "
+        f"coverage={result.coverage['source_types']}"
+    )
 
 
 def main() -> None:
@@ -77,16 +100,20 @@ def main() -> None:
         if forbidden_dept:
             leaked = forbidden_dept in cited_depts
             ok = not leaked
-            detail = (f"forbidden '{forbidden_dept}' leaked={leaked}; "
-                      f"blocked_at_source={forbidden_dept in denied_depts}")
+            detail = (
+                f"forbidden '{forbidden_dept}' leaked={leaked}; "
+                f"blocked_at_source={forbidden_dept in denied_depts}"
+            )
         elif expected_dept:
             ok = expected_dept in cited_depts
             detail = f"served '{expected_dept}' content={ok}"
         all_pass &= ok
         print(f"\n[{desc}]  ->  {'PASS' if ok else 'FAIL'}")
         print(f"  {detail}")
-        print(f"  cited_departments={sorted(cited_depts)} | "
-              f"authorised={result.authorised_count} denied={result.denied_count}")
+        print(
+            f"  cited_departments={sorted(cited_depts)} | "
+            f"authorised={result.authorised_count} denied={result.denied_count}"
+        )
     print(f"\nRBAC enforcement: {'ALL SCENARIOS PASS' if all_pass else 'FAILURES DETECTED'}")
 
     print("\n" + BAR + "\nAudit trail (last 5 entries):\n" + BAR)

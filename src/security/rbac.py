@@ -13,6 +13,7 @@ retrieval candidate is authorised only when ALL of the following hold:
 The engine produces a structured :class:`AccessDecision` for every check, which
 feeds both the audit trail and the explainability surface in API responses.
 """
+
 from __future__ import annotations
 
 import json
@@ -73,18 +74,33 @@ class RBACEngine:
 
         # 1. Department scope
         if not is_admin and department not in depts:
-            return self._deny(user_id, role, doc_meta, f"role '{role}' has no access to department '{department}'")
+            return self._deny(
+                user_id, role, doc_meta, f"role '{role}' has no access to department '{department}'"
+            )
         # 2. Clearance
         if self._rank.get(sensitivity, 99) > self._rank.get(role_cfg["clearance"], -1):
-            return self._deny(user_id, role, doc_meta,
-                              f"document sensitivity '{sensitivity}' exceeds role clearance "
-                              f"'{role_cfg['clearance']}'")
+            return self._deny(
+                user_id,
+                role,
+                doc_meta,
+                f"document sensitivity '{sensitivity}' exceeds role clearance "
+                f"'{role_cfg['clearance']}'",
+            )
         # 3. Explicit ACL
         if explicit_roles and not is_admin and role not in explicit_roles:
-            return self._deny(user_id, role, doc_meta, f"document restricted to roles {explicit_roles}")
+            return self._deny(
+                user_id, role, doc_meta, f"document restricted to roles {explicit_roles}"
+            )
 
-        return AccessDecision(user_id, role, doc_id, department, sensitivity, True,
-                              "authorised: department scope, clearance and ACL satisfied")
+        return AccessDecision(
+            user_id,
+            role,
+            doc_id,
+            department,
+            sensitivity,
+            True,
+            "authorised: department scope, clearance and ACL satisfied",
+        )
 
     def _deny(self, user_id: str, role: str, doc_meta: dict, reason: str) -> AccessDecision:
         department = doc_meta.get("department", "")

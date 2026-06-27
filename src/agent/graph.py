@@ -1,11 +1,12 @@
-from langgraph.graph import StateGraph, END
 from langgraph.checkpoint.memory import MemorySaver
+from langgraph.graph import END, StateGraph
 
-from src.agent.state import AgentState
 from src.agent.planner import plan_step
-from src.agent.retriever import RetrievalAgent
 from src.agent.reasoner import reason_step
 from src.agent.responder import ResponseAgent
+from src.agent.retriever import RetrievalAgent
+from src.agent.state import AgentState
+
 
 class AgenticRAG:
     """Agentic RAG orchestrator using LangGraph."""
@@ -38,9 +39,7 @@ class AgenticRAG:
             return "plan"
 
         workflow.add_conditional_edges(
-            "reason",
-            route_after_reasoning,
-            {"respond": "respond", "plan": "plan"}
+            "reason", route_after_reasoning, {"respond": "respond", "plan": "plan"}
         )
 
         workflow.add_edge("respond", END)
@@ -62,7 +61,7 @@ class AgenticRAG:
             sufficient=False,
             answer="",
             confidence={},
-            citations=[]
+            citations=[],
         )
 
         config = {"configurable": {"thread_id": thread_id}}

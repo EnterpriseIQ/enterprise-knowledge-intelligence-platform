@@ -3,14 +3,14 @@
 These are the most important tests in the suite: they prove unauthorised content is
 never surfaced, regardless of how relevant it is to the query.
 """
+
 from __future__ import annotations
 
 from src.security import RBACEngine
 
 
 def _meta(dept, sens="internal", roles=""):
-    return {"doc_id": f"{dept}-x", "department": dept, "sensitivity": sens,
-            "allowed_roles": roles}
+    return {"doc_id": f"{dept}-x", "department": dept, "sensitivity": sens, "allowed_roles": roles}
 
 
 def test_department_isolation():

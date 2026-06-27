@@ -4,6 +4,7 @@ Turns retrieved chunks into numbered, de-duplicated citations. Every fact in a
 generated answer references one of these markers so the response is auditable back
 to a specific document, page and chunk — the core of grounding and explainability.
 """
+
 from __future__ import annotations
 
 from src.retrieval.hybrid_retriever import RetrievedChunk

@@ -6,6 +6,7 @@ deterministic hashing embedder so the platform always runs end to end. The activ
 backend is exposed via :attr:`Embedder.backend` for transparency in logs and the
 API ``/health`` endpoint.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -36,8 +37,7 @@ class Embedder:
     # --------------------------------------------------------------------- #
     def embed(self, texts: list[str]) -> list[list[float]]:
         if self._model is not None:
-            vecs = self._model.encode(texts, normalize_embeddings=True,
-                                      show_progress_bar=False)
+            vecs = self._model.encode(texts, normalize_embeddings=True, show_progress_bar=False)
             return [v.tolist() for v in vecs]
         return [self._hash_embed(t) for t in texts]
 
@@ -61,4 +61,5 @@ class Embedder:
 
 def _tokenise(text: str) -> list[str]:
     import re
+
     return re.findall(r"[a-z0-9]+", text.lower())

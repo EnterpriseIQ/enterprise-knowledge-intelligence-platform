@@ -1,7 +1,9 @@
 import sqlite3
+
 import pytest
-from pathlib import Path
+
 from src.ingestion.sql_loader import load_sql
+
 
 @pytest.fixture
 def sample_db(tmp_path):
@@ -16,6 +18,7 @@ def sample_db(tmp_path):
     conn.close()
     return db_path
 
+
 def test_load_sql_basic(sample_db):
     result = load_sql(sample_db)
 
@@ -24,11 +27,16 @@ def test_load_sql_basic(sample_db):
 
     # Check users table content
     assert "Table users (columns: id, name):" in result
-    assert "- 'id=' || coalesce(\"id\", 'None'); 'name=' || coalesce(\"name\", 'None')" not in result # Ensure it evaluated
+    assert (
+        "- 'id=' || coalesce(\"id\", 'None'); 'name=' || coalesce(\"name\", 'None')" not in result
+    )  # Ensure it evaluated
 
     # Actually wait, the output of load_sql for rows is rendering the concat_expr result
     # We should see something like `- id=1; name=Alice`
-    assert "- 'id=' || coalesce(\"id\", 'None'); 'name=' || coalesce(\"name\", 'None')" not in result
+    assert (
+        "- 'id=' || coalesce(\"id\", 'None'); 'name=' || coalesce(\"name\", 'None')" not in result
+    )
+
 
 def test_load_sql_max_rows(sample_db):
     # Test with max_rows = 1
@@ -43,6 +51,7 @@ def test_load_sql_max_rows(sample_db):
     orders_block = result.split("Table orders (columns: id, user_id, amount):")[1]
     row_count = orders_block.count("- ")
     assert row_count == 1
+
 
 def test_load_sql_injection_mitigation(sample_db):
     # Pass a malicious string instead of an int to max_rows_per_table

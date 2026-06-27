@@ -4,6 +4,7 @@ Reads every user table from a SQLite database and linearises the rows into text
 records, one block per table. Schema information is included so that schema-level
 questions retrieve well. Read-only access only: the loader never writes.
 """
+
 from __future__ import annotations
 
 import sqlite3
@@ -34,7 +35,7 @@ def load_sql(path: Path, max_rows_per_table: int = 500) -> str:
 
     batch_size = 100
     for i in range(0, len(tables), batch_size):
-        batch_tables = tables[i:i+batch_size]
+        batch_tables = tables[i : i + batch_size]
         queries = []
         params = []
         for table in batch_tables:
@@ -53,7 +54,9 @@ def load_sql(path: Path, max_rows_per_table: int = 500) -> str:
             t_lit = table.replace("'", "''")
             t_id = table.replace('"', '""')
 
-            queries.append(f"SELECT * FROM (SELECT '{t_lit}', {concat_expr} FROM \"{t_id}\" LIMIT ?)")
+            queries.append(
+                f"SELECT * FROM (SELECT '{t_lit}', {concat_expr} FROM \"{t_id}\" LIMIT ?)"
+            )
             params.append(max_rows_per_table)
 
         if queries:

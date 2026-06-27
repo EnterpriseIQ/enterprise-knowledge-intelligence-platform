@@ -1,7 +1,4 @@
-def reciprocal_rank_fusion(
-    results_lists: list[list[dict]],
-    k: int = 60
-) -> dict[str, float]:
+def reciprocal_rank_fusion(results_lists: list[list[dict]], k: int = 60) -> dict[str, float]:
     """Applies Reciprocal Rank Fusion to multiple lists of retrieved items.
 
     Args:

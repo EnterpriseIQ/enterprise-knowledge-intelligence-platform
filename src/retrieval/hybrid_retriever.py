@@ -12,22 +12,21 @@ RBAC is enforced in two layers (defence in depth):
 2. Every fused candidate is re-checked with the full :class:`RBACEngine` (clearance
    + explicit ACLs), and denied items are recorded for the audit trail.
 """
+
 from __future__ import annotations
 
-from dataclasses import dataclass
-
 import os
+from dataclasses import dataclass
 
 from src import config
 from src.retrieval.bm25_retriever import BM25Retriever
+from src.retrieval.query_expansion import QueryExpander
 from src.retrieval.query_router import RouteDecision
+from src.retrieval.reranker import CrossEncoderReranker
+from src.retrieval.rrf import reciprocal_rank_fusion
 from src.retrieval.semantic_retriever import SemanticRetriever
 from src.security.rbac import AccessDecision, RBACEngine
 from src.vectorstore import VectorStore
-
-from src.retrieval.rrf import reciprocal_rank_fusion
-from src.retrieval.reranker import CrossEncoderReranker
-from src.retrieval.query_expansion import QueryExpander
 
 
 @dataclass
@@ -37,6 +36,7 @@ class RetrievalRequest:
     route: RouteDecision | None = None
     top_k: int | None = None
     user_id: str = ""
+
 
 @dataclass
 class RetrievedChunk:
@@ -136,11 +136,17 @@ class HybridRetriever:
         # Collect candidates by chunk id
         pool: dict[str, dict] = {}
         for r in dense:
-            pool[r["id"]] = {"text": r["text"], "metadata": r["metadata"],
-                             "semantic": r.get("semantic_score", 0.0), "bm25": 0.0}
+            pool[r["id"]] = {
+                "text": r["text"],
+                "metadata": r["metadata"],
+                "semantic": r.get("semantic_score", 0.0),
+                "bm25": 0.0,
+            }
         for r in sparse:
-            entry = pool.setdefault(r["id"], {"text": r["text"], "metadata": r["metadata"],
-                                              "semantic": 0.0, "bm25": 0.0})
+            entry = pool.setdefault(
+                r["id"],
+                {"text": r["text"], "metadata": r["metadata"], "semantic": 0.0, "bm25": 0.0},
+            )
             entry["bm25"] = r.get("bm25_score", 0.0)
 
         # Normalise each channel independently, then blend.
@@ -160,20 +166,30 @@ class HybridRetriever:
 
             fused = self.alpha * sem_norm.get(cid, 0.0) + (1 - self.alpha) * bm_norm.get(cid, 0.0)
             boost = 0.10 if meta.get("department") in boosted_depts else 0.0
-            results.append(RetrievedChunk(
-                chunk_id=cid, text=e["text"], metadata=meta,
-                semantic_score=e["semantic"], bm25_score=e["bm25"],
-                fused_score=min(1.0, fused + boost), route_boost=boost))
+            results.append(
+                RetrievedChunk(
+                    chunk_id=cid,
+                    text=e["text"],
+                    metadata=meta,
+                    semantic_score=e["semantic"],
+                    bm25_score=e["bm25"],
+                    fused_score=min(1.0, fused + boost),
+                    route_boost=boost,
+                )
+            )
 
         # Optional Reranking Step
         if self.reranker and self.reranker.is_available and results:
             texts_to_rerank = [r.text for r in results]
             rerank_scores = self.reranker.rerank(request.query, texts_to_rerank)
-            rerank_norm = _minmax({r.chunk_id: s for r, s in zip(results, rerank_scores)})
+            rerank_norm = _minmax({r.chunk_id: s for r, s in zip(results, rerank_scores, strict=True)})
             for r in results:
                 # Blend reranker score and original fused score
                 # 0.7 reranker, 0.3 original
-                r.fused_score = min(1.0, 0.7 * rerank_norm.get(r.chunk_id, 0.0) + 0.3 * r.fused_score + r.route_boost)
+                r.fused_score = min(
+                    1.0,
+                    0.7 * rerank_norm.get(r.chunk_id, 0.0) + 0.3 * r.fused_score + r.route_boost,
+                )
 
         results.sort(key=lambda c: c.fused_score, reverse=True)
         return results[:top_k], decisions
