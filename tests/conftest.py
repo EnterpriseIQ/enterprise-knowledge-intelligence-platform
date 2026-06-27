@@ -4,6 +4,7 @@ Builds the corpus and a single warm pipeline once per test session so the suite 
 fast and exercises the real end-to-end system (ingestion → index → retrieval →
 RBAC → generation).
 """
+
 from __future__ import annotations
 
 import sys

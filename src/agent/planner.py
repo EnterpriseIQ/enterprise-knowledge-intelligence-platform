@@ -1,5 +1,6 @@
 from src.agent.state import AgentState
 
+
 def plan_step(state: AgentState) -> AgentState:
     """The Planner Agent parses the initial query to decompose it or set up execution steps."""
     query = state["query"]
@@ -12,8 +13,4 @@ def plan_step(state: AgentState) -> AgentState:
         parts = query.lower().split(" and ")
         sub_queries = parts
 
-    return {
-        **state,
-        "sub_queries": sub_queries,
-        "attempts": state.get("attempts", 0) + 1
-    }
+    return {**state, "sub_queries": sub_queries, "attempts": state.get("attempts", 0) + 1}

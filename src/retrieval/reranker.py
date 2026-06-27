@@ -1,6 +1,7 @@
 import os
-from typing import Optional
+
 from sentence_transformers import CrossEncoder
+
 
 class Reranker:
     def __init__(self, model_name: str):

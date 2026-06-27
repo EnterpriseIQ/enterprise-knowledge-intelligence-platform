@@ -1,4 +1,5 @@
 """Pydantic request/response models for the API."""
+
 from __future__ import annotations
 
 from pydantic import BaseModel, Field
@@ -7,9 +8,11 @@ from pydantic import BaseModel, Field
 class QueryRequest(BaseModel):
     query: str = Field(..., description="Natural-language question.", min_length=1)
     role: str | None = Field(
-        None, description="Explicit role (Admin|HR|Finance|Engineering|Compliance).")
+        None, description="Explicit role (Admin|HR|Finance|Engineering|Compliance)."
+    )
     user_id: str | None = Field(
-        None, description="Known user id; its role is used if 'role' is omitted.")
+        None, description="Known user id; its role is used if 'role' is omitted."
+    )
     top_k: int | None = Field(None, ge=1, le=20, description="Number of sources to return.")
 
     model_config = {

@@ -4,6 +4,7 @@ Extracts text from PDF documents using ``pypdf``. Page boundaries are preserved
 as lightweight markers so that the chunker and citation engine can report the
 page a passage came from.
 """
+
 from __future__ import annotations
 
 from pathlib import Path

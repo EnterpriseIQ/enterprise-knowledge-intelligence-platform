@@ -9,11 +9,13 @@ Wires the layers together into two operations:
 The pipeline is the single object the API and CLI depend on, so the whole platform
 can be exercised without a web server.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass
 
 from src import config
+from src.agent.graph import AgenticRAG
 from src.generation.answer_generator import GroundedAnswerGenerator
 from src.generation.citation import build_citations
 from src.generation.confidence import score_confidence
@@ -24,7 +26,6 @@ from src.retrieval.hybrid_retriever import HybridRetriever, RetrievalRequest
 from src.retrieval.query_router import QueryRouter
 from src.security import AuditLogger, RBACEngine
 from src.vectorstore import VectorStore
-from src.agent.graph import AgenticRAG
 
 
 @dataclass
@@ -93,8 +94,9 @@ class RAGPipeline:
         }
 
     # ------------------------------------------------------------------ #
-    def agentic_query(self, query: str, role: str | None = None, user_id: str = "",
-                      top_k: int | None = None) -> QueryResult:
+    def agentic_query(
+        self, query: str, role: str | None = None, user_id: str = "", top_k: int | None = None
+    ) -> QueryResult:
         if not self._indexed:
             self.build_index()
 
@@ -108,7 +110,7 @@ class RAGPipeline:
         final_state = self.agentic_rag.query(query, role=eff_role, user_id=user_id or "")
 
         chunks = final_state.get("retrieved_chunks", [])
-        decisions = [] # We'll need to fetch the decisions. For now, since they run through our retriever, we assume they passed if returned.
+        decisions = []  # We'll need to fetch the decisions. For now, since they run through our retriever, we assume they passed if returned.
         # Actually, in full implementation, we'd persist decisions in the state.
         # But for drop-in replacement we mock the denied/authorised counts based on standard RAG behavior or just pass 0.
 
@@ -123,19 +125,33 @@ class RAGPipeline:
         authorised = len(chunks)
         denied = 0
 
-        self.audit.log_query(user_id or eff_role, eff_role, query,
-                             authorised=authorised, denied=denied,
-                             confidence=confidence.get("score", 0.0))
+        self.audit.log_query(
+            user_id or eff_role,
+            eff_role,
+            query,
+            authorised=authorised,
+            denied=denied,
+            confidence=confidence.get("score", 0.0),
+        )
 
         return QueryResult(
-            query=query, role=eff_role, user_id=user_id, answer=answer,
-            confidence=confidence, citations=citations, route=route.to_dict(),
-            coverage=coverage, access_decisions=[],
-            authorised_count=authorised, denied_count=denied)
+            query=query,
+            role=eff_role,
+            user_id=user_id,
+            answer=answer,
+            confidence=confidence,
+            citations=citations,
+            route=route.to_dict(),
+            coverage=coverage,
+            access_decisions=[],
+            authorised_count=authorised,
+            denied_count=denied,
+        )
 
     # ------------------------------------------------------------------ #
-    def query(self, query: str, role: str | None = None, user_id: str = "",
-              top_k: int | None = None) -> QueryResult:
+    def query(
+        self, query: str, role: str | None = None, user_id: str = "", top_k: int | None = None
+    ) -> QueryResult:
         if not self._indexed:
             self.build_index()
 
@@ -147,7 +163,7 @@ class RAGPipeline:
             role=eff_role,
             route=route,
             top_k=(top_k or config.TOP_K) * 2,
-            user_id=user_id
+            user_id=user_id,
         )
         chunks, decisions = self.retriever.retrieve(request)
         chunks = diversify(chunks, top_k=top_k or config.TOP_K)
@@ -161,13 +177,26 @@ class RAGPipeline:
         authorised = sum(1 for d in decisions if d.allowed)
 
         # Audit every query and the access decisions behind it.
-        self.audit.log_query(user_id or eff_role, eff_role, query,
-                             authorised=authorised, denied=denied,
-                             confidence=confidence["score"])
+        self.audit.log_query(
+            user_id or eff_role,
+            eff_role,
+            query,
+            authorised=authorised,
+            denied=denied,
+            confidence=confidence["score"],
+        )
         self.audit.log_access_decisions(user_id or eff_role, eff_role, decisions)
 
         return QueryResult(
-            query=query, role=eff_role, user_id=user_id, answer=answer,
-            confidence=confidence, citations=citations, route=route.to_dict(),
-            coverage=coverage, access_decisions=decisions,
-            authorised_count=authorised, denied_count=denied)
+            query=query,
+            role=eff_role,
+            user_id=user_id,
+            answer=answer,
+            confidence=confidence,
+            citations=citations,
+            route=route.to_dict(),
+            coverage=coverage,
+            access_decisions=decisions,
+            authorised_count=authorised,
+            denied_count=denied,
+        )

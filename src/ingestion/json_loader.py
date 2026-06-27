@@ -4,6 +4,7 @@ Handles JSON logs and audit trails, which are typically a list of event objects.
 Each event is flattened into a single text line so individual events remain
 retrievable, while the whole file stays attributable as one source document.
 """
+
 from __future__ import annotations
 
 import json

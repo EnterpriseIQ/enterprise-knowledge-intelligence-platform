@@ -5,6 +5,7 @@ preserves context across boundaries so answers are not truncated mid-thought.
 Page markers (``[[page=N]]``) emitted by the PDF loader are consumed here and
 turned into structured ``page`` metadata for citations.
 """
+
 from __future__ import annotations
 
 import re
@@ -31,7 +32,7 @@ def _split_with_pages(text: str) -> list[tuple[str, int | None]]:
     pos = 0
     for m in _PAGE_RE.finditer(text):
         if m.start() > pos:
-            segments.append((text[pos:m.start()], current_page))
+            segments.append((text[pos : m.start()], current_page))
         current_page = int(m.group(1))
         pos = m.end()
     if pos < len(text):
@@ -59,15 +60,15 @@ def _window(text: str, size: int, overlap: int) -> list[str]:
             # very long single sentences are hard-split
             while len(buf) > size:
                 chunks.append(buf[:size])
-                buf = buf[size - overlap:]
+                buf = buf[size - overlap :]
     if buf:
         chunks.append(buf)
     return chunks
 
 
-def chunk_documents(docs: list[RawDocument],
-                    size: int | None = None,
-                    overlap: int | None = None) -> list[Chunk]:
+def chunk_documents(
+    docs: list[RawDocument], size: int | None = None, overlap: int | None = None
+) -> list[Chunk]:
     size = size or config.CHUNK_SIZE
     overlap = overlap or config.CHUNK_OVERLAP
 

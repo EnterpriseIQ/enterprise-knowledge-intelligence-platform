@@ -1,6 +1,8 @@
 import time
+
+from evaluation.metrics import mrr_at_k, ndcg_at_k, precision_at_k, recall_at_k
 from src.pipeline import RAGPipeline
-from evaluation.metrics import precision_at_k, recall_at_k, mrr_at_k, ndcg_at_k
+
 
 def run_benchmarks():
     pipeline = RAGPipeline()
@@ -8,16 +10,12 @@ def run_benchmarks():
 
     # A tiny dummy dataset to verify the pipeline
     test_cases = [
-        {
-            "query": "What is the remote work policy?",
-            "relevant_ids": {"hr-remote"},
-            "role": "HR"
-        },
+        {"query": "What is the remote work policy?", "relevant_ids": {"hr-remote"}, "role": "HR"},
         {
             "query": "Show engineering deployment standards",
             "relevant_ids": {"eng-deploy"},
-            "role": "Engineering"
-        }
+            "role": "Engineering",
+        },
     ]
 
     results = []
@@ -36,24 +34,27 @@ def run_benchmarks():
         mrr = mrr_at_k(retrieved_doc_ids, tc["relevant_ids"], 3)
         ndcg = ndcg_at_k(retrieved_doc_ids, tc["relevant_ids"], 3)
 
-        results.append({
-            "query": tc["query"],
-            "latency": latency,
-            "precision@3": p_at_3,
-            "recall@3": r_at_3,
-            "mrr": mrr,
-            "ndcg": ndcg,
-            "confidence": res.confidence.get("score", 0.0)
-        })
+        results.append(
+            {
+                "query": tc["query"],
+                "latency": latency,
+                "precision@3": p_at_3,
+                "recall@3": r_at_3,
+                "mrr": mrr,
+                "ndcg": ndcg,
+                "confidence": res.confidence.get("score", 0.0),
+            }
+        )
 
     return results
 
+
 def write_report(results):
-    avg_mrr = sum(r['mrr'] for r in results) / len(results)
-    avg_ndcg = sum(r['ndcg'] for r in results) / len(results)
-    avg_p3 = sum(r['precision@3'] for r in results) / len(results)
-    avg_r3 = sum(r['recall@3'] for r in results) / len(results)
-    avg_latency = sum(r['latency'] for r in results) / len(results)
+    avg_mrr = sum(r["mrr"] for r in results) / len(results)
+    avg_ndcg = sum(r["ndcg"] for r in results) / len(results)
+    avg_p3 = sum(r["precision@3"] for r in results) / len(results)
+    avg_r3 = sum(r["recall@3"] for r in results) / len(results)
+    avg_latency = sum(r["latency"] for r in results) / len(results)
 
     report_content = f"""# KnowledgeX Auto-Generated Benchmark Report
 
@@ -73,6 +74,7 @@ def write_report(results):
     with open("reports/benchmark_report.md", "w") as f:
         f.write(report_content)
     print("Report generated at reports/benchmark_report.md")
+
 
 if __name__ == "__main__":
     results = run_benchmarks()

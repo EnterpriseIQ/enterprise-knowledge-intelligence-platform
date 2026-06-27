@@ -64,7 +64,10 @@ export function Navigation() {
 
         {/* Mobile Toggle */}
         <button
-          className="md:hidden p-2 text-muted-foreground hover:text-foreground"
+          className="md:hidden p-2 text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          aria-expanded={isMobileMenuOpen}
+          aria-controls="mobile-menu"
+          aria-label="Toggle Navigation Menu"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
           {isMobileMenuOpen ? <X /> : <Menu />}
@@ -78,6 +81,9 @@ export function Navigation() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
+            id="mobile-menu"
+            role="region"
+            aria-label="Mobile Navigation Menu"
             className="absolute top-16 left-0 w-full bg-background border-b border-border shadow-lg md:hidden flex flex-col p-4 gap-4"
           >
             {navLinks.map((link) => (

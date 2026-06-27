@@ -6,6 +6,7 @@ Examples
     python -m src.cli --role HR    --query "What is the remote work policy?"
     python -m src.cli --user eng_dave --query "Show finance budget allocations."
 """
+
 from __future__ import annotations
 
 import argparse
@@ -31,23 +32,23 @@ def main() -> None:
         if not args.query:
             return
 
-    result = pipeline.query(args.query, role=args.role,
-                            user_id=args.user or "", top_k=args.top_k)
+    result = pipeline.query(args.query, role=args.role, user_id=args.user or "", top_k=args.top_k)
 
     if args.json:
         print(json.dumps(result.to_dict(), indent=2))
         return
 
-    print(f"\nQ: {result.query}")
-    print(f"Role: {result.role}   Confidence: {result.confidence['label']} "
-          f"({result.confidence['score']})")
-    print(f"\nAnswer:\n{result.answer}\n")
-    print("Citations:")
+    print(f"\n\033[1;34mQ:\033[0m {result.query}")
+    print(
+        f"\033[1;36mRole:\033[0m {result.role}   \033[1;35mConfidence:\033[0m {result.confidence['label']} "
+        f"({result.confidence['score']})"
+    )
+    print(f"\n\033[1;32mAnswer:\033[0m\n{result.answer}\n")
+    print("\033[1;33mCitations:\033[0m")
     for c in result.citations:
-        print(f"  {c['reference']}")
-    print(f"\nRouting: {result.route['rationale']}")
-    print(f"Access: {result.authorised_count} authorised / "
-          f"{result.denied_count} denied chunks")
+        print(f"  \033[33m{c['reference']}\033[0m")
+    print(f"\n\033[1;36mRouting:\033[0m {result.route['rationale']}")
+    print(f"\033[1;31mAccess:\033[0m {result.authorised_count} authorised / {result.denied_count} denied chunks")
 
 
 if __name__ == "__main__":

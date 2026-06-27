@@ -3,6 +3,7 @@
 These lock in that the optional LLM backend is a real, working code path (it parses
 Anthropic-style responses and degrades gracefully), not a placeholder.
 """
+
 from __future__ import annotations
 
 from src.generation.answer_generator import _REFUSAL, GroundedAnswerGenerator
@@ -11,11 +12,18 @@ from src.retrieval.hybrid_retriever import RetrievedChunk
 
 def _chunks():
     return [
-        RetrievedChunk(chunk_id="d::0", text="The remote work policy allows three days "
-                       "remote per week with VPN access.",
-                       metadata={"title": "Remote Work Policy", "department": "HR",
-                                 "page": 1, "source_type": "pdf", "doc_id": "hr-remote"},
-                       fused_score=0.9),
+        RetrievedChunk(
+            chunk_id="d::0",
+            text="The remote work policy allows three days remote per week with VPN access.",
+            metadata={
+                "title": "Remote Work Policy",
+                "department": "HR",
+                "page": 1,
+                "source_type": "pdf",
+                "doc_id": "hr-remote",
+            },
+            fused_score=0.9,
+        ),
     ]
 
 

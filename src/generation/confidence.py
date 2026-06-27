@@ -13,6 +13,7 @@ These are combined into a 0–1 score and bucketed into high / medium / low labe
 that the API surfaces to the user. The aim is honesty: low retrieval support yields
 low confidence and an explicit "insufficient evidence" answer rather than a guess.
 """
+
 from __future__ import annotations
 
 import re
@@ -20,8 +21,27 @@ import re
 from src import config
 from src.retrieval.hybrid_retriever import RetrievedChunk
 
-_STOP = {"the", "a", "an", "is", "are", "what", "show", "of", "to", "and", "for",
-         "in", "on", "me", "our", "latest", "recent", "please", "give"}
+_STOP = {
+    "the",
+    "a",
+    "an",
+    "is",
+    "are",
+    "what",
+    "show",
+    "of",
+    "to",
+    "and",
+    "for",
+    "in",
+    "on",
+    "me",
+    "our",
+    "latest",
+    "recent",
+    "please",
+    "give",
+}
 
 
 def _terms(text: str) -> set[str]:
@@ -30,8 +50,11 @@ def _terms(text: str) -> set[str]:
 
 def score_confidence(query: str, chunks: list[RetrievedChunk]) -> dict:
     if not chunks:
-        return {"score": 0.0, "label": "none",
-                "explanation": "No authorised, relevant context was retrieved."}
+        return {
+            "score": 0.0,
+            "label": "none",
+            "explanation": "No authorised, relevant context was retrieved.",
+        }
 
     q_terms = _terms(query)
 
@@ -47,8 +70,8 @@ def score_confidence(query: str, chunks: list[RetrievedChunk]) -> dict:
         context_terms |= terms
 
     if q_terms:
-        coverage = len(q_terms & context_terms) / len(q_terms)        # over top-3
-        top_coverage = len(q_terms & top_terms) / len(q_terms)        # over top-1
+        coverage = len(q_terms & context_terms) / len(q_terms)  # over top-3
+        top_coverage = len(q_terms & top_terms) / len(q_terms)  # over top-1
     else:
         coverage = top_coverage = 0.5  # vague query: stay neutral
 
@@ -57,11 +80,11 @@ def score_confidence(query: str, chunks: list[RetrievedChunk]) -> dict:
     support_factor = min(1.0, support / 3.0)
 
     top_doc = chunks[0].metadata.get("doc_id")
-    agreement = sum(1 for c in chunks[:3]
-                    if c.metadata.get("doc_id") == top_doc) / min(3, len(chunks))
+    agreement = sum(1 for c in chunks[:3] if c.metadata.get("doc_id") == top_doc) / min(
+        3, len(chunks)
+    )
 
-    score = (0.50 * coverage + 0.25 * top_coverage
-             + 0.15 * support_factor + 0.10 * agreement)
+    score = 0.50 * coverage + 0.25 * top_coverage + 0.15 * support_factor + 0.10 * agreement
     score = round(min(1.0, score), 4)
 
     if score >= config.CONFIDENCE_HIGH:
@@ -72,7 +95,7 @@ def score_confidence(query: str, chunks: list[RetrievedChunk]) -> dict:
         label = "low"
 
     explanation = (
-        f"query_term_coverage={round(coverage,2)}, top_chunk_coverage={round(top_coverage,2)}, "
-        f"supporting_chunks={support}, source_agreement={round(agreement,2)}"
+        f"query_term_coverage={round(coverage, 2)}, top_chunk_coverage={round(top_coverage, 2)}, "
+        f"supporting_chunks={support}, source_agreement={round(agreement, 2)}"
     )
     return {"score": score, "label": label, "explanation": explanation}
