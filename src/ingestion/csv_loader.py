@@ -5,6 +5,7 @@ can be embedded and retrieved alongside prose. A compact schema summary is added
 so that aggregate questions ("which service had the highest error rate?") have
 context to match against.
 """
+
 from __future__ import annotations
 
 from pathlib import Path

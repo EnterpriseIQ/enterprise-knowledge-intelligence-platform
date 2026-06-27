@@ -9,18 +9,19 @@ GET  /audit         Recent audit-trail entries (explainability).
 
 The pipeline is built once at startup so the model and index are warm.
 """
+
 from __future__ import annotations
 
 import asyncio
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from prometheus_client import make_asgi_app, Counter, Histogram
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+from prometheus_client import Counter, Histogram, make_asgi_app
 
-from src.api.models import QueryRequest, QueryResponse
 from src.api.auth import get_api_key
+from src.api.models import QueryRequest, QueryResponse
 from src.pipeline import RAGPipeline
 
 _state: dict = {}
@@ -47,8 +48,8 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Secure Enterprise RAG Intelligence Platform",
     description="Context-aware Retrieval-Augmented Generation across heterogeneous "
-                "enterprise sources with strict RBAC, grounded citations and "
-                "confidence scoring.",
+    "enterprise sources with strict RBAC, grounded citations and "
+    "confidence scoring.",
     version="1.0.0",
     lifespan=lifespan,
 )
@@ -90,8 +91,11 @@ def roles():
     rbac = _pipeline().rbac
     return {
         "roles": {
-            name: {"departments": cfg["departments"], "clearance": cfg["clearance"],
-                   "description": cfg.get("description", "")}
+            name: {
+                "departments": cfg["departments"],
+                "clearance": cfg["clearance"],
+                "description": cfg.get("description", ""),
+            }
             for name, cfg in rbac.roles.items()
         },
         "users": rbac.users,
@@ -106,8 +110,9 @@ def query(req: QueryRequest):
 
     with QUERY_LATENCY.time():
         try:
-            result = pipeline.agentic_query(req.query, role=req.role,
-                                            user_id=req.user_id or "", top_k=req.top_k)
+            result = pipeline.agentic_query(
+                req.query, role=req.role, user_id=req.user_id or "", top_k=req.top_k
+            )
         except ValueError as exc:
             raise HTTPException(status_code=400, detail=str(exc)) from exc
     return result.to_dict()

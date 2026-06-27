@@ -41,9 +41,7 @@ SQL_DB_FILE = STRUCTURED_DIR / "operations.db"
 AUDIT_LOG_FILE = LOGS_DIR / "audit_trail.jsonl"
 
 # Persistent vector store location (Chroma) — falls back to in-memory store.
-VECTORSTORE_DIR = Path(
-    getenv("ERAG_VECTORSTORE_DIR", DATA_DIR / "vectorstore")
-)
+VECTORSTORE_DIR = Path(getenv("ERAG_VECTORSTORE_DIR", DATA_DIR / "vectorstore"))
 COLLECTION_NAME = getenv("ERAG_COLLECTION", "enterprise_corpus")
 
 # --------------------------------------------------------------------------- #
@@ -80,8 +78,5 @@ ROLES = ["Admin", "HR", "Finance", "Engineering", "Compliance"]
 
 def ensure_dirs() -> None:
     """Create all runtime directories if they do not yet exist."""
-    for d in (
-        DATA_DIR, DOCUMENTS_DIR, STRUCTURED_DIR, LOGS_DIR, RBAC_DIR,
-        VECTORSTORE_DIR
-    ):
+    for d in (DATA_DIR, DOCUMENTS_DIR, STRUCTURED_DIR, LOGS_DIR, RBAC_DIR, VECTORSTORE_DIR):
         d.mkdir(parents=True, exist_ok=True)

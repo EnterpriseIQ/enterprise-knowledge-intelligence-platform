@@ -1,9 +1,11 @@
 import os
+
 import requests
-from typing import Optional
 
 from src.retrieval.hybrid_retriever import RetrievedChunk
+
 from .base import GenerationProvider
+
 
 class OllamaProvider(GenerationProvider):
     def __init__(self, model_name: str = "llama3"):
@@ -19,10 +21,10 @@ class OllamaProvider(GenerationProvider):
         # but available during query.
         return True
 
-    def generate(self, query: str, chunks: list[RetrievedChunk], system_prompt: str) -> Optional[str]:
+    def generate(self, query: str, chunks: list[RetrievedChunk], system_prompt: str) -> str | None:
         context = "\n\n".join(
-            f"[{i}] (source: {c.metadata.get('title')}, {c.metadata.get('department')}) "
-            f"{c.text}" for i, c in enumerate(chunks, start=1)
+            f"[{i}] (source: {c.metadata.get('title')}, {c.metadata.get('department')}) {c.text}"
+            for i, c in enumerate(chunks, start=1)
         )
         user_msg = f"Context passages:\n{context}\n\nQuestion: {query}"
 
@@ -33,14 +35,12 @@ class OllamaProvider(GenerationProvider):
                     "model": self._model,
                     "messages": [
                         {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": user_msg}
+                        {"role": "user", "content": user_msg},
                     ],
                     "stream": False,
-                    "options": {
-                        "num_predict": 1024
-                    }
+                    "options": {"num_predict": 1024},
                 },
-                timeout=30
+                timeout=30,
             )
             resp.raise_for_status()
             data = resp.json()

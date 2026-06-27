@@ -4,6 +4,7 @@ A thin wrapper around the vector store that returns embedding-similarity matches
 Kept as its own module so the dense path can be swapped (e.g. a different vector
 DB or a reranker) without touching the fusion logic.
 """
+
 from __future__ import annotations
 
 from src.vectorstore import VectorStore
