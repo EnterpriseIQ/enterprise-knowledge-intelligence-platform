@@ -27,7 +27,7 @@ export function Navigation() {
     <header
       className={cn(
         'fixed top-0 w-full z-50 transition-all duration-300 border-b border-transparent',
-        isScrolled ? 'bg-background/80 backdrop-blur-md border-border shadow-sm' : 'bg-transparent'
+        isScrolled ? 'bg-background/80 backdrop-blur-xl border-border shadow-sm' : 'bg-transparent'
       )}
     >
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -44,7 +44,7 @@ export function Navigation() {
             <a
               key={link.name}
               href={link.href}
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
             >
               {link.name}
             </a>

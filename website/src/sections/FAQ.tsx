@@ -4,20 +4,20 @@ import { ChevronDown } from 'lucide-react';
 
 const faqs = [
   {
-    q: "How does Kortex differ from standard RAG?",
-    a: "Standard RAG assumes all embedded documents can be read by anyone. Kortex treats access control as a first-class retrieval concern, filtering vectors by clearance and explicit ACLs before they can ever reach the generation phase."
+    q: "How does EnterpriseIq differ from standard RAG?",
+    a: "Standard RAG assumes all embedded documents can be read by anyone. EnterpriseIq treats access control as a first-class retrieval concern, filtering vectors by clearance and explicit ACLs before they can ever reach the generation phase."
   },
   {
     q: "Does it require an internet connection?",
-    a: "No. While it supports external providers like OpenAI and Anthropic, Kortex defaults to a completely offline stack using local sentence-transformers, ChromaDB, and local LLMs (like Qwen3 or Llama 3 via Ollama) to guarantee absolute data privacy."
+    a: "No. While it supports external providers like OpenAI and Anthropic, EnterpriseIq defaults to a completely offline stack using local sentence-transformers, ChromaDB, and local LLMs (like Qwen3 or Llama 3 via Ollama) to guarantee absolute data privacy."
   },
   {
     q: "How does it handle unstructured vs structured data?",
-    a: "Kortex maps heterogeneous data (PDFs, CSVs, SQL rows, JSON logs) into a unified `RawDocument` model during ingestion, allowing a single hybrid search query to retrieve and rank context across all source types simultaneously."
+    a: "EnterpriseIq maps heterogeneous data (PDFs, CSVs, SQL rows, JSON logs) into a unified `RawDocument` model during ingestion, allowing a single hybrid search query to retrieve and rank context across all source types simultaneously."
   },
   {
     q: "What prevents the AI from hallucinating?",
-    a: "Kortex uses an 'Extractive Grounding' prompt technique. The LLM is strictly instructed to answer only using the provided retrieved context, and to explicitly refuse to answer if the context lacks sufficient evidence. Every claim is mapped to a cited source snippet."
+    a: "EnterpriseIq uses an 'Extractive Grounding' prompt technique. The LLM is strictly instructed to answer only using the provided retrieved context, and to explicitly refuse to answer if the context lacks sufficient evidence. Every claim is mapped to a cited source snippet."
   }
 ];
 
@@ -53,7 +53,7 @@ export const FAQ = () => {
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
                 aria-expanded={openIndex === i}
                 aria-controls={`faq-content-${i}`}
-                className="w-full flex items-center justify-between p-6 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-xl"
+                className="w-full flex items-center justify-between p-6 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-xl"
               >
                 <span className="font-medium text-lg">{faq.q}</span>
                 <ChevronDown

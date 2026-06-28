@@ -7,7 +7,7 @@ export const TrustedTech = () => {
         <p className="text-center text-sm text-muted-foreground mb-8">
           Built on enterprise-grade infrastructure
         </p>
-        <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-50 grayscale">
+        <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
           {/* Placeholders for logos */}
           <div className="flex items-center gap-2 font-semibold text-lg"><div className="w-6 h-6 rounded-full bg-current" /> AWS</div>
           <div className="flex items-center gap-2 font-semibold text-lg"><div className="w-6 h-6 rounded-sm bg-current" /> OpenAI</div>

@@ -50,7 +50,7 @@ export const Problem = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 + i * 0.1 }}
-              className="glass-card p-8 rounded-2xl border border-white/5 relative group"
+              className="glass-card p-8 rounded-2xl border border-white/10 hover:border-white/20 transition-colors relative group"
             >
               <div className="mb-4 p-3 bg-white/5 rounded-lg inline-block group-hover:scale-110 transition-transform">
                 {item.icon}
