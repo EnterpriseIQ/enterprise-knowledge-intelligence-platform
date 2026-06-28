@@ -1,5 +1,5 @@
 from typing import TypedDict
-
+from src.security.rbac import AccessDecision
 
 class AgentState(TypedDict):
     """The state of the agent workflow."""
@@ -11,6 +11,7 @@ class AgentState(TypedDict):
     # Accumulated intermediate state
     sub_queries: list[str]
     retrieved_chunks: list[dict]
+    access_decisions: list[AccessDecision]
     reasoning: list[str]
 
     # Routing control

@@ -110,9 +110,7 @@ class RAGPipeline:
         final_state = self.agentic_rag.query(query, role=eff_role, user_id=user_id or "")
 
         chunks = final_state.get("retrieved_chunks", [])
-        decisions = []  # We'll need to fetch the decisions. For now, since they run through our retriever, we assume they passed if returned.
-        # Actually, in full implementation, we'd persist decisions in the state.
-        # But for drop-in replacement we mock the denied/authorised counts based on standard RAG behavior or just pass 0.
+        decisions = final_state.get("access_decisions", [])
 
         answer = final_state.get("answer", "")
         confidence = final_state.get("confidence", {})
@@ -121,9 +119,9 @@ class RAGPipeline:
         # Calculate coverage
         coverage = source_coverage(chunks)
 
-        # We will mock the audit logging for the agent path to be minimal unless tracked inside.
-        authorised = len(chunks)
-        denied = 0
+        # Calculate real access decisions
+        authorised = sum(1 for d in decisions if d.allowed)
+        denied = sum(1 for d in decisions if not d.allowed)
 
         self.audit.log_query(
             user_id or eff_role,
@@ -133,6 +131,7 @@ class RAGPipeline:
             denied=denied,
             confidence=confidence.get("score", 0.0),
         )
+        self.audit.log_access_decisions(user_id or eff_role, eff_role, decisions)
 
         return QueryResult(
             query=query,
@@ -143,7 +142,7 @@ class RAGPipeline:
             citations=citations,
             route=route.to_dict(),
             coverage=coverage,
-            access_decisions=[],
+            access_decisions=decisions,
             authorised_count=authorised,
             denied_count=denied,
         )
