@@ -70,7 +70,8 @@ export function Features() {
               transition={{ delay: index * 0.1 }}
               whileHover={{ y: -5 }}
             >
-              <Card className="h-full bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/50 transition-colors cursor-default group overflow-hidden relative">
+              <Card className="h-full bg-card/50 backdrop-blur-sm border-white/10 hover:border-white/20 transition-colors cursor-default group overflow-hidden relative">
+                <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <CardHeader>
                   <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">

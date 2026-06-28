@@ -25,7 +25,7 @@ export const Solution = () => {
             transition={{ delay: 0.1 }}
             className="text-lg text-muted-foreground mb-8"
           >
-            Kortex enforces strict Role-Based Access Control (RBAC) <em>before</em> generating answers. Every query is filtered through a rigorous clearance matrix, ensuring complete compliance and exact citations.
+            EnterpriseIq enforces strict Role-Based Access Control (RBAC) <em>before</em> generating answers. Every query is filtered through a rigorous clearance matrix, ensuring complete compliance and exact citations.
           </motion.p>
 
           <ul className="space-y-6">
@@ -71,7 +71,7 @@ export const Solution = () => {
           transition={{ duration: 0.5 }}
           className="relative"
         >
-          <div className="glass-card rounded-2xl p-8 border border-success/20 bg-success/[0.02]">
+          <div className="glass-card rounded-2xl p-8 border border-white/10 hover:border-white/20 transition-colors bg-success/[0.02]">
              <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between p-4 rounded-lg bg-white/5 border border-white/10">
                   <div className="flex items-center gap-3">

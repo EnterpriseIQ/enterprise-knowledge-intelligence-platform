@@ -24,7 +24,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-          className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight max-w-4xl bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70"
+          className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight max-w-4xl bg-clip-text text-transparent bg-gradient-to-br from-foreground via-foreground/90 to-foreground/50"
         >
           The Enterprise Knowledge Intelligence Platform
         </motion.h1>
@@ -58,7 +58,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 40, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.7, delay: 0.5, ease: "easeOut" }}
-          className="mt-20 w-full max-w-5xl relative rounded-xl border border-border bg-card/50 backdrop-blur-xl shadow-2xl overflow-hidden"
+          className="mt-20 w-full max-w-5xl relative rounded-xl ring-1 ring-white/10 shadow-[0_0_80px_rgba(255,255,255,0.05)] bg-card/50 backdrop-blur-xl border border-border overflow-hidden"
         >
           <div className="absolute top-0 left-0 w-full h-12 border-b border-border bg-muted/50 flex items-center px-4 gap-2">
             <div className="flex gap-1.5">
