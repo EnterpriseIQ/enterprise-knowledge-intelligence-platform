@@ -65,7 +65,7 @@ def test_load_sql_injection_mitigation(sample_db):
     # Since SQLite limits take integers, passing a string that evaluates to integer or just fails
     # is much better than arbitrary SQL execution.
     try:
-        result = load_sql(sample_db, max_rows_per_table=malicious_input)
+        load_sql(sample_db, max_rows_per_table=malicious_input)
 
         # Verify table 'users' wasn't modified
         conn = sqlite3.connect(sample_db)
