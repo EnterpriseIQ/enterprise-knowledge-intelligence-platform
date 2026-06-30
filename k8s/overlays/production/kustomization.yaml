@@ -1,0 +1,7 @@
+resources:
+  - ../../base
+  - knowledge-api/hpa.yaml
+  - knowledge-api/pdb.yaml
+
+patchesStrategicMerge:
+  - knowledge-api/deployment-patch.yaml

@@ -1,5 +1,7 @@
 from typing import TypedDict
+
 from src.security.rbac import AccessDecision
+
 
 class AgentState(TypedDict):
     """The state of the agent workflow."""
