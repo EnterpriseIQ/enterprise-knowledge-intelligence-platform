@@ -15,3 +15,5 @@ data/logs/audit_trail.jsonl
 .DS_Store
 .idea/
 .vscode/
+.coverage
+htmlcov/
