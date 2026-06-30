@@ -11,6 +11,7 @@ class RetrievalAgent:
     def retrieve_step(self, state: AgentState) -> AgentState:
         """The Retrieval Agent runs retrieval for all sub-queries and aggregates them."""
         all_chunks = []
+        all_decisions = []
 
         # Execute retrieval for each planned sub-query
         for sq in state["sub_queries"]:
@@ -19,10 +20,11 @@ class RetrievalAgent:
             request = RetrievalRequest(
                 query=sq, role=state["role"], route=route, user_id=state["user_id"]
             )
-            chunks, _ = self.pipeline.retriever.retrieve(request)
+            chunks, decisions = self.pipeline.retriever.retrieve(request)
             all_chunks.extend(chunks)
+            all_decisions.extend(decisions)
 
         # Diversify to prevent one sub-query from dominating
         diversified_chunks = diversify(all_chunks, top_k=10)
 
-        return {**state, "retrieved_chunks": diversified_chunks}
+        return {**state, "retrieved_chunks": diversified_chunks, "access_decisions": all_decisions}
