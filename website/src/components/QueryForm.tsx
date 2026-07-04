@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Loader2, ShieldCheck, ShieldAlert, FileText, Check } from 'lucide-react';
+import { Search, Loader2, ShieldCheck, ShieldAlert, FileText, Check, Sparkles } from 'lucide-react';
 import { Button } from './ui/button';
 
 // Add explicit types for the result to avoid any
@@ -19,6 +19,50 @@ interface QueryResult {
   citations?: Citation[];
 }
 
+const suggestedQueries = [
+  "What were our Q3 earnings?",
+  "Summarize the new remote work policy",
+  "Explain the backend architecture"
+];
+
+const getMockResponse = (q: string): QueryResult => {
+  const lowerQ = q.toLowerCase();
+
+  if (lowerQ.includes('earning') || lowerQ.includes('revenue') || lowerQ.includes('financial') || lowerQ.includes('q3')) {
+    return {
+      answer: "Based on the Q3 financial reports, EnterpriseIQ's revenue grew by 24% year-over-year to $14.2M. The enterprise software division was the primary driver, accounting for 65% of total revenue. Operating margins improved from 18% to 22% due to optimized cloud infrastructure costs.",
+      confidence: { score: 0.94 },
+      routing: { route_type: "financial_structured_data" },
+      access_summary: { authorised_chunks: 12, denied_chunks: 0 },
+      citations: [{ document_id: "Q3_Earnings_Report_Final.pdf" }, { document_id: "Financial_Metrics_Dashboard_2023.xlsx" }]
+    };
+  } else if (lowerQ.includes('policy') || lowerQ.includes('leave') || lowerQ.includes('hr') || lowerQ.includes('remote')) {
+     return {
+      answer: "According to the updated employee handbook (v2.1), full-time employees are entitled to 20 days of paid time off (PTO) annually, plus 10 public holidays. The new remote work policy allows up to 3 days of work-from-home per week. Parental leave has been expanded to 16 weeks fully paid for the primary caregiver.",
+      confidence: { score: 0.98 },
+      routing: { route_type: "hr_policy_unstructured" },
+      access_summary: { authorised_chunks: 5, denied_chunks: 2 },
+      citations: [{ document_id: "Employee_Handbook_v2.1.pdf" }, { document_id: "HR_Benefits_Update_Memo.docx" }]
+    };
+  } else if (lowerQ.includes('architecture') || lowerQ.includes('tech') || lowerQ.includes('stack')) {
+    return {
+      answer: "The platform's architecture is built on a microservices model. The backend utilizes Python and FastAPI, deployed via Kubernetes. The frontend is a React application built with Vite, TypeScript, and Tailwind CSS. Data is stored in PostgreSQL, with Redis for caching and Elasticsearch for document retrieval.",
+      confidence: { score: 0.91 },
+      routing: { route_type: "engineering_wiki" },
+      access_summary: { authorised_chunks: 8, denied_chunks: 0 },
+      citations: [{ document_id: "Architecture_Overview_v3.md" }, { document_id: "Tech_Stack_Proposal.pdf" }]
+    };
+  }
+
+  return {
+    answer: `Here is a synthesized response for your query: "${q}".\n\nThe platform has retrieved relevant information from your enterprise data sources. It utilizes a hybrid search approach combining dense vector embeddings and keyword matching to find the most accurate context before synthesizing this response using the configured LLM.`,
+    confidence: { score: 0.85 },
+    routing: { route_type: "general_knowledge_rag" },
+    access_summary: { authorised_chunks: 4, denied_chunks: 1 },
+    citations: [{ document_id: "Enterprise_Knowledge_Base.md" }]
+  };
+}
+
 export const QueryForm = () => {
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
@@ -27,24 +71,32 @@ export const QueryForm = () => {
   // Use env var or default to the hosted api URL if public
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!query.trim()) return;
+  const executeSearch = async (searchQuery: string) => {
+    if (!searchQuery.trim()) return;
 
     setLoading(true);
     try {
       const res = await fetch(`${API_URL}/query`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query }),
+        body: JSON.stringify({ query: searchQuery }),
       });
+      if (!res.ok) throw new Error('API not available');
       const data = await res.json();
       setResult(data);
     } catch (err) {
-      console.error(err);
+      console.warn("Backend not reachable, using simulated response for playground.", err);
+      // Simulate network delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      setResult(getMockResponse(searchQuery));
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    executeSearch(query);
   };
 
   return (
@@ -57,10 +109,14 @@ export const QueryForm = () => {
         <div className="ml-4 text-xs font-mono text-muted-foreground flex items-center gap-2">
           agent.execute(query="<span className="text-white">{query || '...'}</span>")
         </div>
+        <div className="ml-auto text-xs font-mono text-blue-400/70 flex items-center gap-1.5 bg-blue-500/10 px-2 py-1 rounded-md border border-blue-500/20">
+          <Sparkles className="w-3 h-3" />
+          Interactive Playground
+        </div>
       </div>
 
       {/* Search Input */}
-      <form onSubmit={handleSubmit} className="relative mb-6">
+      <form onSubmit={handleSubmit} className="relative mb-3">
         <div className="relative flex items-center">
           <Search className="absolute left-4 w-5 h-5 text-muted-foreground" />
           <input
@@ -80,6 +136,23 @@ export const QueryForm = () => {
         </div>
       </form>
 
+      {/* Suggested Queries */}
+      <div className="flex flex-wrap gap-2 mb-6">
+        {suggestedQueries.map((sq, i) => (
+          <button
+            key={i}
+            type="button"
+            onClick={() => {
+              setQuery(sq);
+              executeSearch(sq);
+            }}
+            className="text-xs px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white transition-colors"
+          >
+            {sq}
+          </button>
+        ))}
+      </div>
+
       {/* Results Area */}
       <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent pr-2 space-y-4">
         <AnimatePresence mode="wait">
@@ -88,9 +161,10 @@ export const QueryForm = () => {
                initial={{ opacity: 0 }}
                animate={{ opacity: 1 }}
                exit={{ opacity: 0 }}
-               className="h-full flex flex-col items-center justify-center text-muted-foreground gap-4"
+               className="h-full flex flex-col items-center justify-center text-muted-foreground gap-4 pb-12"
              >
-               <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
+               <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center border border-white/10 relative">
+                 <div className="absolute inset-0 rounded-full border border-white/5 animate-ping opacity-20" />
                  <Search className="w-8 h-8 opacity-50" />
                </div>
                <p>Enter a query to run the agentic RAG pipeline.</p>
