@@ -1,7 +1,7 @@
-# KnowledgeX Enterprise Intelligence Platform Case Study
+# EnterpriseIQ Enterprise Intelligence Platform Case Study
 
 ## Executive Summary
-Transformed a secure RAG prototype into KnowledgeX, an Enterprise Knowledge Intelligence Platform supporting Agentic RAG, advanced semantic retrieval, multiple local/remote LLM backends, and full observability.
+Transformed a secure RAG prototype into EnterpriseIQ, an Enterprise Knowledge Intelligence Platform supporting Agentic RAG, advanced semantic retrieval, multiple local/remote LLM backends, and full observability.
 
 ## Business Challenge
 Enterprise AI systems face distinct constraints compared to consumer applications: strict access control (RBAC), preventing hallucinated outputs, integrating hybrid structured and unstructured data, and maintaining complete auditability.

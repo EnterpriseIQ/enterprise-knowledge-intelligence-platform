@@ -4,20 +4,20 @@ import { ChevronDown } from 'lucide-react';
 
 const faqs = [
   {
-    q: "How does EnterpriseIq differ from standard RAG?",
-    a: "Standard RAG assumes all embedded documents can be read by anyone. EnterpriseIq treats access control as a first-class retrieval concern, filtering vectors by clearance and explicit ACLs before they can ever reach the generation phase."
+    q: "How does EnterpriseIQ differ from standard RAG?",
+    a: "Standard RAG assumes all embedded documents can be read by anyone. EnterpriseIQ treats access control as a first-class retrieval concern, filtering vectors by clearance and explicit ACLs before they can ever reach the generation phase."
   },
   {
     q: "Does it require an internet connection?",
-    a: "No. While it supports external providers like OpenAI and Anthropic, EnterpriseIq defaults to a completely offline stack using local sentence-transformers, ChromaDB, and local LLMs (like Qwen3 or Llama 3 via Ollama) to guarantee absolute data privacy."
+    a: "No. While it supports external providers like OpenAI and Anthropic, EnterpriseIQ defaults to a completely offline stack using local sentence-transformers, ChromaDB, and local LLMs (like Qwen3 or Llama 3 via Ollama) to guarantee absolute data privacy."
   },
   {
     q: "How does it handle unstructured vs structured data?",
-    a: "EnterpriseIq maps heterogeneous data (PDFs, CSVs, SQL rows, JSON logs) into a unified `RawDocument` model during ingestion, allowing a single hybrid search query to retrieve and rank context across all source types simultaneously."
+    a: "EnterpriseIQ maps heterogeneous data (PDFs, CSVs, SQL rows, JSON logs) into a unified `RawDocument` model during ingestion, allowing a single hybrid search query to retrieve and rank context across all source types simultaneously."
   },
   {
     q: "What prevents the AI from hallucinating?",
-    a: "EnterpriseIq uses an 'Extractive Grounding' prompt technique. The LLM is strictly instructed to answer only using the provided retrieved context, and to explicitly refuse to answer if the context lacks sufficient evidence. Every claim is mapped to a cited source snippet."
+    a: "EnterpriseIQ uses an 'Extractive Grounding' prompt technique. The LLM is strictly instructed to answer only using the provided retrieved context, and to explicitly refuse to answer if the context lacks sufficient evidence. Every claim is mapped to a cited source snippet."
   }
 ];
 

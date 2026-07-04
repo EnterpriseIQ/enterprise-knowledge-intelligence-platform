@@ -1,4 +1,4 @@
-# Product Analysis: Secure Enterprise RAG Intelligence Platform (KnowledgeX)
+# Product Analysis: Secure Enterprise RAG Intelligence Platform (EnterpriseIQ)
 
 ## DELIVERABLES
 

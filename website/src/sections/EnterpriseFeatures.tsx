@@ -22,7 +22,7 @@ export const EnterpriseFeatures = () => {
               transition={{ delay: 0.1 }}
               className="text-lg text-muted-foreground mb-8"
             >
-              Designed for the strict compliance and security requirements of Fortune 500 companies. Kortex provides granular control over your data, access, and AI models.
+              Designed for the strict compliance and security requirements of Fortune 500 companies. EnterpriseIQ provides granular control over your data, access, and AI models.
             </motion.p>
 
             <div className="space-y-6">
@@ -30,7 +30,7 @@ export const EnterpriseFeatures = () => {
                 { icon: <ShieldCheck />, title: "SSO & SAML Integration", desc: "Integrate seamlessly with Okta, Azure AD, and Ping Identity." },
                 { icon: <Users />, title: "Granular RBAC", desc: "Define precise access policies at the document or section level." },
                 { icon: <FileCheck />, title: "Audit Logging", desc: "Comprehensive logs for compliance, security reviews, and usage tracking." },
-                { icon: <Building2 />, title: "VPC Deployment", desc: "Deploy Kortex securely within your own virtual private cloud." }
+                { icon: <Building2 />, title: "VPC Deployment", desc: "Deploy EnterpriseIQ securely within your own virtual private cloud." }
               ].map((item, i) => (
                 <motion.div
                   key={i}

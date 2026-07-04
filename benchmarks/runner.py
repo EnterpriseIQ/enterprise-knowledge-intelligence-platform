@@ -56,7 +56,7 @@ def write_report(results):
     avg_r3 = sum(r["recall@3"] for r in results) / len(results)
     avg_latency = sum(r["latency"] for r in results) / len(results)
 
-    report_content = f"""# KnowledgeX Auto-Generated Benchmark Report
+    report_content = f"""# EnterpriseIQ Auto-Generated Benchmark Report
 
 ## Retrieval Quality
 | Metric | Value |

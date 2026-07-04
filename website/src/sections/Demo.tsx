@@ -12,7 +12,7 @@ export const Demo = () => {
             viewport={{ once: true }}
             className="text-3xl md:text-5xl font-semibold tracking-tight mb-4"
           >
-            See Kortex in Action
+            See EnterpriseIQ in Action
           </motion.h2>
         </div>
 

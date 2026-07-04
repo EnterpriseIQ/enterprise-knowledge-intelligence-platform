@@ -8,8 +8,8 @@ export function FaqCta() {
   const faqs = [
     {
       id: "1",
-      title: "Does EnterpriseIq support air-gapped environments?",
-      content: "Yes. EnterpriseIq is designed for strict enterprise security requirements. You can deploy the entire platform, including local LLMs like Llama 3 or Qwen, entirely offline within your VPC."
+      title: "Does EnterpriseIQ support air-gapped environments?",
+      content: "Yes. EnterpriseIQ is designed for strict enterprise security requirements. You can deploy the entire platform, including local LLMs like Llama 3 or Qwen, entirely offline within your VPC."
     },
     {
       id: "2",
@@ -19,7 +19,7 @@ export function FaqCta() {
     {
       id: "3",
       title: "What is the difference between dense vector search and hybrid search?",
-      content: "Dense vector search captures semantic meaning, but struggles with exact keywords (like IDs or product names). EnterpriseIq uses Hybrid Search, combining dense vectors with sparse BM25 keyword search, and reranks them with a Cross-Encoder for maximum accuracy."
+      content: "Dense vector search captures semantic meaning, but struggles with exact keywords (like IDs or product names). EnterpriseIQ uses Hybrid Search, combining dense vectors with sparse BM25 keyword search, and reranks them with a Cross-Encoder for maximum accuracy."
     },
     {
       id: "4",
