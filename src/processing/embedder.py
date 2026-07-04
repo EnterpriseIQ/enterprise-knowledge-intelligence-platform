@@ -12,6 +12,8 @@ from __future__ import annotations
 import hashlib
 import math
 
+from cachetools import LRUCache
+
 from src import config
 
 
@@ -21,6 +23,7 @@ class Embedder:
         self._model = None
         self.backend = "hashing-fallback"
         self.dim = config.EMBEDDING_DIM_FALLBACK
+        self._cache = LRUCache(maxsize=1000)
         self._try_load_sentence_transformer()
 
     def _try_load_sentence_transformer(self) -> None:
@@ -36,10 +39,31 @@ class Embedder:
 
     # --------------------------------------------------------------------- #
     def embed(self, texts: list[str]) -> list[list[float]]:
-        if self._model is not None:
-            vecs = self._model.encode(texts, normalize_embeddings=True, show_progress_bar=False)
-            return [v.tolist() for v in vecs]
-        return [self._hash_embed(t) for t in texts]
+        results = []
+        uncached_texts = []
+        uncached_indices = []
+
+        for i, text in enumerate(texts):
+            if text in self._cache:
+                results.append(self._cache[text])
+            else:
+                results.append(None)
+                uncached_texts.append(text)
+                uncached_indices.append(i)
+
+        if uncached_texts:
+            if self._model is not None:
+                new_vecs = self._model.encode(uncached_texts, normalize_embeddings=True, show_progress_bar=False)
+                new_vecs_list = [v.tolist() for v in new_vecs]
+            else:
+                new_vecs_list = [self._hash_embed(t) for t in uncached_texts]
+
+            for i, idx in enumerate(uncached_indices):
+                vec = new_vecs_list[i]
+                self._cache[uncached_texts[i]] = vec
+                results[idx] = vec
+
+        return results
 
     # --------------------------------------------------------------------- #
     def _hash_embed(self, text: str) -> list[float]:

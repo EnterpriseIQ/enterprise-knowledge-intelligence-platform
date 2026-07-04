@@ -5,3 +5,6 @@
 ## 2024-06-25 - Optimized `diversify` chunk check
 **Learning:** Found an O(n²) bottleneck in `src/retrieval/cross_source.py` where a list check `if c not in selected:` iterated over the `selected` list for every remaining chunk when topping up diversity. For large contexts, this causes an unnecessary spike in retrieval latency.
 **Action:** Replaced the list `in` check with a set of `chunk_id` properties (`{c.chunk_id for c in selected}`) allowing an O(1) membership test and reducing the fallback top-up to O(n). Using specific properties (like ID) for sets is safer than memory addresses, ensuring identical values correctly deduplicate. Always use sets for membership testing.
+## 2024-07-04 - Cache embeddings to speed up repetitive queries
+**Learning:** The `embed` method in `src/processing/embedder.py` re-calculated embeddings for identical texts on every request, which introduces unnecessary latency, especially during tests or repetitive usage patterns.
+**Action:** Implemented a dictionary-based cache inside the `Embedder` class that stores generated embeddings. Now, `embed` only encodes strings that aren't already present in `self._cache`, massively improving performance for repeated text blocks without modifying external dependencies or changing behavior.

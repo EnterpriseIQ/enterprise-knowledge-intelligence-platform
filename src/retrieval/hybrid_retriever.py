@@ -82,7 +82,7 @@ class HybridRetriever:
 
         self.expander = QueryExpander()
         self.reranker = None
-        if os.getenv("ERAG_RERANKER") == "1":
+        if os.getenv("ERAG_RERANKER", "1") == "1":
             self.reranker = CrossEncoderReranker()
 
     # ------------------------------------------------------------------ #
