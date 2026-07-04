@@ -35,7 +35,7 @@ export function Navigation() {
           <div className="w-8 h-8 rounded bg-primary text-primary-foreground flex items-center justify-center font-bold text-xl">
             E
           </div>
-          <span className="font-bold text-lg tracking-tight">EnterpriseIq</span>
+          <span className="font-bold text-lg tracking-tight">EnterpriseIQ</span>
         </div>
 
         {/* Desktop Nav */}

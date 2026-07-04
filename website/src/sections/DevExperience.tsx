@@ -45,7 +45,7 @@ uvicorn src.api.main:app --reload`;
               transition={{ delay: 0.1 }}
               className="text-lg text-muted-foreground mb-8"
             >
-              Kortex is built for engineers. It ships as a slim, non-root Docker container, configured via twelve-factor environment variables, exposing a fully typed FastAPI backend.
+              EnterpriseIQ is built for engineers. It ships as a slim, non-root Docker container, configured via twelve-factor environment variables, exposing a fully typed FastAPI backend.
             </motion.p>
 
             <ul className="space-y-4">

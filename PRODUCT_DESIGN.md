@@ -1,16 +1,16 @@
-# KnowledgeX Product Design Document
+# EnterpriseIQ Product Design Document
 
-This document defines the comprehensive product design, branding, messaging, and user experience strategy for positioning KnowledgeX as a premium enterprise knowledge intelligence platform.
+This document defines the comprehensive product design, branding, messaging, and user experience strategy for positioning EnterpriseIQ as a premium enterprise knowledge intelligence platform.
 
 ---
 
 ## PART 1: PRODUCT BRAND
 
-**Product Name:** KnowledgeX (Retained/Refined), or **Axiom**, **Nucleus**, or **Kortex**. We will proceed with **Kortex**.
+**Product Name:** KnowledgeX (Retained/Refined), or **Axiom**, **Nucleus**, or **EnterpriseIQ**. We will proceed with **EnterpriseIQ**.
 **Tagline:** The Intelligence Layer for Enterprise Knowledge.
-**Elevator pitch:** Kortex securely unifies fragmented enterprise data into a single, intelligent graph. It answers complex questions across PDFs, databases, and logs with absolute accuracy, enforcing strict role-based access control inside the retrieval path. Zero hallucinations. Zero data leaks. Complete traceability.
-**One sentence:** Kortex is a secure, hybrid-retrieval AI platform that safely brings reasoning and exact answers to isolated enterprise data silos.
-**Three sentence story:** Enterprises store their most valuable knowledge in disconnected silos bound by strict access rules. Naive AI exposes this data or hallucinates answers, eroding trust and compromising security. Kortex solves this by embedding access control directly into the retrieval engine, delivering perfectly cited, grounded answers only from data the user is authorized to see.
+**Elevator pitch:** EnterpriseIQ securely unifies fragmented enterprise data into a single, intelligent graph. It answers complex questions across PDFs, databases, and logs with absolute accuracy, enforcing strict role-based access control inside the retrieval path. Zero hallucinations. Zero data leaks. Complete traceability.
+**One sentence:** EnterpriseIQ is a secure, hybrid-retrieval AI platform that safely brings reasoning and exact answers to isolated enterprise data silos.
+**Three sentence story:** Enterprises store their most valuable knowledge in disconnected silos bound by strict access rules. Naive AI exposes this data or hallucinates answers, eroding trust and compromising security. EnterpriseIQ solves this by embedding access control directly into the retrieval engine, delivering perfectly cited, grounded answers only from data the user is authorized to see.
 **Brand personality:** Trustworthy, precise, sophisticated, and impossibly fast. It feels like an extension of a high-performance engineering team—methodical but powerful.
 **Voice:** Authoritative, clear, and unpretentious. We speak to technical leaders and enterprise operators with equal respect.
 **Tone:** Confident but never arrogant. Technical but accessible. We avoid buzzwords and focus on concrete mechanisms (e.g., "hybrid retrieval," "RBAC-enforced") over hype.
@@ -29,13 +29,13 @@ This document defines the comprehensive product design, branding, messaging, and
 *   **Purpose:** Agitate the pain of siloed data and the danger of naive RAG/AI.
 *   **Headline:** Your data is siloed. Naive AI makes it dangerous.
 *   **Copy direction:** Acknowledge that giving an LLM access to everything is a data leak waiting to happen. Highlight hallucinations and access violations.
-*   **Visual idea:** A split-screen graphic: On the left, a chaotic, leaking pipeline of documents; on the right, Kortex’s precise, governed, and gated pipeline.
+*   **Visual idea:** A split-screen graphic: On the left, a chaotic, leaking pipeline of documents; on the right, EnterpriseIQ’s precise, governed, and gated pipeline.
 
 ### 3. Solution
-*   **Purpose:** Introduce Kortex as the methodical, secure answer.
+*   **Purpose:** Introduce EnterpriseIQ as the methodical, secure answer.
 *   **Headline:** Grounded answers. Governed access.
-*   **Copy direction:** Explain that Kortex enforces RBAC *before* generating answers, ensuring absolute compliance and exact citations.
-*   **Visual idea:** A clean, glowing schematic of the Kortex architecture, highlighting the "RBAC Enforcement" gate.
+*   **Copy direction:** Explain that EnterpriseIQ enforces RBAC *before* generating answers, ensuring absolute compliance and exact citations.
+*   **Visual idea:** A clean, glowing schematic of the EnterpriseIQ architecture, highlighting the "RBAC Enforcement" gate.
 
 ### 4. Features
 *   **Purpose:** Highlight the core technical and business capabilities.
@@ -57,7 +57,7 @@ This document defines the comprehensive product design, branding, messaging, and
 
 ### 7. Demo
 *   **Purpose:** Prove it works immediately.
-*   **Headline:** See Kortex in action.
+*   **Headline:** See EnterpriseIQ in action.
 *   **Copy direction:** Minimal. Let the product speak.
 *   **Visual idea:** An embedded, auto-playing high-fidelity terminal recording (using Asciinema or similar) showing a fast query and citation.
 
@@ -93,7 +93,7 @@ This document defines the comprehensive product design, branding, messaging, and
 
 ### 13. Roadmap
 *   **Purpose:** Show momentum and vision.
-*   **Headline:** What's next for Kortex.
+*   **Headline:** What's next for EnterpriseIQ.
 *   **Copy direction:** Concise list of upcoming features (Cross-encoder reranking, RLHF).
 *   **Visual idea:** A minimalist timeline with glowing current-status markers.
 
@@ -125,13 +125,13 @@ This document defines the comprehensive product design, branding, messaging, and
 
 ## PART 3: HERO SECTION
 
-**Small announcement badge:** `Introducing Kortex 1.0 — The zero-leak enterprise RAG platform →`
+**Small announcement badge:** `Introducing EnterpriseIQ 1.0 — The zero-leak enterprise RAG platform →`
 **Headline:** Intelligence you can trust. Access you can control.
-**Supporting paragraph:** Unify your fragmented PDFs, databases, and logs into a single, intelligent graph. Kortex enforces strict role-based access control inside the retrieval engine, delivering perfectly cited answers with zero hallucinations and zero data leaks.
+**Supporting paragraph:** Unify your fragmented PDFs, databases, and logs into a single, intelligent graph. EnterpriseIQ enforces strict role-based access control inside the retrieval engine, delivering perfectly cited answers with zero hallucinations and zero data leaks.
 **Primary CTA:** View Documentation
 **Secondary CTA:** Request Enterprise Demo
 **Background illustration ideas:** A deep space/dark mode background with a subtle, glowing mesh gradient. A constellation of nodes representing data sources slowly connecting.
-**Animation ideas:** As the user scrolls, the nodes snap into an organized grid, symbolizing Kortex structuring chaotic data.
+**Animation ideas:** As the user scrolls, the nodes snap into an organized grid, symbolizing EnterpriseIQ structuring chaotic data.
 **Mockup ideas:** A sleek, semi-transparent terminal window layered over the background, automatically typing a query: `> kortex query "Show finance budget allocations" --role Finance`. The answer streams in below with glowing citations.
 
 ---
@@ -268,7 +268,7 @@ This document defines the comprehensive product design, branding, messaging, and
 *   **Technology logos:** "Built with" section: FastAPI, ChromaDB, Python, Docker.
 *   **Enterprise trust indicators:** "Designed for Finance, Healthcare, and Defense."
 *   **Testimonials (structure only):**
-    *   *Quote:* "A concise statement about how Kortex solved a specific security or silo problem."
+    *   *Quote:* "A concise statement about how EnterpriseIQ solved a specific security or silo problem."
     *   *Name, Title*
     *   *Company Logo* (Monochrome)
 
@@ -284,7 +284,7 @@ This document defines the comprehensive product design, branding, messaging, and
 *   [ ] **Animated SVGs:** The pipeline steps glowing in sequence.
 *   [ ] **Icons:** Custom, crisp SVG icons for the Bento grid.
 *   [ ] **OpenGraph image:** A stunning 1200x630 image with the logo, tagline, and a subtle code background for social sharing.
-*   [ ] **Logo:** "Kortex" - A minimalist geometric mark (e.g., a node connecting securely to a block).
+*   [ ] **Logo:** "EnterpriseIQ" - A minimalist geometric mark (e.g., a node connecting securely to a block).
 *   [ ] **Favicon:** The geometric mark, optimized for 16x16 and 32x32.
 
 ---
@@ -370,7 +370,7 @@ A single-column, long-scrolling page. Dark theme throughout. Ample negative spac
 
 ### Animation Plan
 1. On load: Hero text staggers in (fade + slight upward translation). Terminal mockup types out query automatically.
-2. On scroll (Problem): The "chaos" side of the graphic shakes slightly, the "Kortex" side flows smoothly.
+2. On scroll (Problem): The "chaos" side of the graphic shakes slightly, the "EnterpriseIQ" side flows smoothly.
 3. On scroll (Bento): Cards stagger fade-in. Hovering a card triggers a slight scale (`1.02`), brightens the border, and triggers an inner micro-animation (e.g., the shield icon glows).
 4. On scroll (Architecture): The pipeline steps light up sequentially from left to right as they enter the viewport.
 

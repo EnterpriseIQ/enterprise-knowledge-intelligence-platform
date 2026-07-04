@@ -33,9 +33,9 @@ export function DeveloperExperience() {
             <div className="p-6 overflow-x-auto">
               <pre className="text-sm font-mono leading-relaxed">
                 <code className="text-[#c9d1d9]">
-                  <span className="text-[#ff7b72]">import</span> {'{'} <span className="text-[#79c0ff]">KnowledgeX</span> {'}'} <span className="text-[#ff7b72]">from</span> <span className="text-[#a5d6ff]">'@knowledgex/sdk'</span>;<br/><br/>
-                  <span className="text-[#ff7b72]">const</span> <span className="text-[#79c0ff]">client</span> <span className="text-[#ff7b72]">=</span> <span className="text-[#ff7b72]">new</span> <span className="text-[#d2a8ff]">KnowledgeX</span>({'{'}<br/>
-                  {'  '}apiKey: <span className="text-[#79c0ff]">process</span>.env.<span className="text-[#79c0ff]">KX_API_KEY</span>,<br/>
+                  <span className="text-[#ff7b72]">import</span> {'{'} <span className="text-[#79c0ff]">EnterpriseIQ</span> {'}'} <span className="text-[#ff7b72]">from</span> <span className="text-[#a5d6ff]">'@enterpriseiq/sdk'</span>;<br/><br/>
+                  <span className="text-[#ff7b72]">const</span> <span className="text-[#79c0ff]">client</span> <span className="text-[#ff7b72]">=</span> <span className="text-[#ff7b72]">new</span> <span className="text-[#d2a8ff]">EnterpriseIQ</span>({'{'}<br/>
+                  {'  '}apiKey: <span className="text-[#79c0ff]">process</span>.env.<span className="text-[#79c0ff]">EIQ_API_KEY</span>,<br/>
                   {'  '}environment: <span className="text-[#a5d6ff]">'production'</span><br/>
                   {'}'});<br/><br/>
                   <span className="text-[#8b949e]">// Execute an agentic query with strict RBAC</span><br/>

@@ -1,4 +1,4 @@
-# KnowledgeX Auto-Generated Benchmark Report
+# EnterpriseIQ Auto-Generated Benchmark Report
 
 ## Retrieval Quality
 | Metric | Value |

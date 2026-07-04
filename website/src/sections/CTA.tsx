@@ -24,7 +24,7 @@ export const CTA = () => {
           transition={{ delay: 0.1 }}
           className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto"
         >
-          Stop compromising between security and intelligence. Deploy Kortex today and give your team the answers they need, safely.
+          Stop compromising between security and intelligence. Deploy EnterpriseIQ today and give your team the answers they need, safely.
         </motion.p>
 
         <motion.div

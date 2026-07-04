@@ -17,7 +17,7 @@ export function Footer() {
               <div className="w-8 h-8 rounded bg-primary text-primary-foreground flex items-center justify-center font-bold text-xl">
                 E
               </div>
-              <span className="font-bold text-lg tracking-tight">EnterpriseIq</span>
+              <span className="font-bold text-lg tracking-tight">EnterpriseIQ</span>
             </div>
             <p className="text-muted-foreground mb-6 max-w-sm">
               The secure, high-performance agentic RAG platform for enterprise data intelligence.
@@ -46,7 +46,7 @@ export function Footer() {
         </div>
 
         <div className="pt-8 border-t border-border/50 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} EnterpriseIq. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} EnterpriseIQ. All rights reserved.</p>
           <div className="flex gap-6">
             <a href="#" className="hover:text-foreground transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-foreground transition-colors">Terms of Service</a>

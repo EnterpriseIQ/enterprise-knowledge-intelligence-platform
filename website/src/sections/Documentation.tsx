@@ -23,7 +23,7 @@ export const Documentation = () => {
               transition={{ delay: 0.1 }}
               className="text-lg text-muted-foreground mb-8"
             >
-              Everything you need to integrate, deploy, and manage Kortex. Comprehensive guides, API references, and architecture blueprints.
+              Everything you need to integrate, deploy, and manage EnterpriseIQ. Comprehensive guides, API references, and architecture blueprints.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 20 }}

@@ -1,6 +1,6 @@
 # Architecture Overview
 
-KnowledgeX employs a multi-agent orchestrated pipeline.
+EnterpriseIQ employs a multi-agent orchestrated pipeline.
 
 ## Diagram
 

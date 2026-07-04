@@ -6,12 +6,12 @@ export const HowItWorks = () => {
     {
       icon: <Database className="w-6 h-6 text-blue-400" />,
       title: "1. Connect Data Sources",
-      description: "Securely connect your fragmented data repositories. Kortex creates an intelligent graph of your enterprise knowledge."
+      description: "Securely connect your fragmented data repositories. EnterpriseIQ creates an intelligent graph of your enterprise knowledge."
     },
     {
       icon: <Search className="w-6 h-6 text-purple-400" />,
       title: "2. Query the Knowledge Graph",
-      description: "Users ask complex questions. Kortex searches through structured and unstructured data in milliseconds."
+      description: "Users ask complex questions. EnterpriseIQ searches through structured and unstructured data in milliseconds."
     },
     {
       icon: <Cpu className="w-6 h-6 text-orange-400" />,
