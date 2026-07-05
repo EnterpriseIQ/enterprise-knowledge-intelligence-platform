@@ -1,11 +1,10 @@
-import os
-import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
-from src.retrieval.hybrid_retriever import RetrievedChunk
-from src.generation.providers.openai_provider import OpenAIProvider
 from src.generation.providers.gemini_provider import GeminiProvider
 from src.generation.providers.ollama_provider import OllamaProvider
+from src.generation.providers.openai_provider import OpenAIProvider
+from src.retrieval.hybrid_retriever import RetrievedChunk
+
 
 def dummy_chunks():
     return [

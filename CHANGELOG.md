@@ -5,19 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.0] - 2024-03-20
+## [Unreleased]
 
 ### Added
-- **Hybrid Retrieval Pipeline**: Min-max fusion of Dense Vector Search (SentenceTransformers) and Sparse Search (BM25).
-- **Strict RBAC Enforcement**: Two-layer security model applied pre- and post-retrieval.
-- **Offline Extractive Generation**: Default generation mode that operates entirely offline, guaranteeing zero hallucinations.
-- **Grounded Citations**: Explicit mapping of generated text to source chunks, complete with page numbers and snippets.
-- **Explainability**: Full routing rationale and access decision logs available per query.
-- **FastAPI Backend**: Complete REST API with `/query`, `/health`, `/roles`, and `/audit` endpoints.
-- **React Frontend**: Built with Vite, React 19, Tailwind CSS, and Framer Motion.
-- **Docker Support**: Containerized deployment with health checks.
-- **Comprehensive Documentation**: Added complete `docs/` folder covering architecture, APIs, operations, and security.
+- Comprehensive enterprise-grade documentation and repository structures.
+- New SVG visual assets for architecture and pipeline workflows.
+- Professional MkDocs/GitHub Pages compatible documentation hierarchy.
 
-### Security
-- Implemented API Key authentication for all endpoints.
-- Validated that RBAC prevents cross-department data leakage.
+### Changed
+- Rebranded references from KnowledgeX to EnterpriseIQ across the codebase.
+- Overhauled README.md for better onboarding and discoverability.
+
+## [1.0.0] - Initial Release
+
+### Added
+- Core RAG pipeline with Hybrid Retrieval (ChromaDB + BM25).
+- Strict multi-layer Role-Based Access Control (RBAC).
+- Extractive generation mode guaranteeing zero hallucinations.
+- FastAPI backend with observability (Prometheus, OpenTelemetry).
+- Synthetic data generation for testing and evaluation.
+- React/Vite frontend interface.

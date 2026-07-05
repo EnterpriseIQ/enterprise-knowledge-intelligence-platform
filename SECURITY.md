@@ -1,8 +1,10 @@
 # Security Policy
 
+Security is foundational to EnterpriseIQ. Our primary mandate is to prevent data leakage and hallucinations within enterprise environments.
+
 ## Supported Versions
 
-Currently, only the latest release of the EnterpriseIQ platform receives security updates. If you are running an older version, please upgrade to the latest stable release.
+Currently, only the latest `main` branch is receiving active security updates.
 
 | Version | Supported          |
 | ------- | ------------------ |
@@ -11,27 +13,34 @@ Currently, only the latest release of the EnterpriseIQ platform receives securit
 
 ## Reporting a Vulnerability
 
-We take the security of EnterpriseIQ seriously, especially given its role in handling sensitive enterprise data.
+If you discover a security vulnerability, please DO NOT report it through public issues or discussions.
 
-If you discover a security vulnerability, please **DO NOT** open a public issue.
+Instead, please email the security team at **security@enterpriseiq.io**.
 
-Instead, please email your findings to **security@enterpriseiq.example.com** (replace with actual security contact if deployed).
+We will acknowledge your email within 48 hours and provide a timeline for triaging and resolving the issue.
 
 ### What to Include
+Please provide as much information as possible:
+- A description of the vulnerability.
+- Steps to reproduce.
+- Any relevant logs (scrubbed of actual confidential data).
+- Potential impact (e.g., cross-department data leakage, RBAC bypass).
 
-Please provide the following information in your report:
+## Threat Model
 
-- Description of the vulnerability.
-- Steps to reproduce the issue.
-- Potential impact (e.g., RBAC bypass, data leakage, remote code execution).
-- Any suggested mitigations or patches.
+EnterpriseIQ assumes a hostile internal environment (Zero-Trust). We expect users to actively try to prompt-inject or bypass RBAC to access other departments' data.
 
-### Response Timeline
+Our threat model explicitly covers:
+1.  **RBAC Bypass:** Attempting to retrieve chunks outside of the user's explicit ACL or department.
+2.  **Prompt Injection (Jailbreaking):** Attempting to force the LLM to output restricted data.
+3.  **Data Poisoning:** Attempting to ingest malicious documents to corrupt the index.
 
-- **Acknowledgement**: Within 24 hours.
-- **Triage & Fix**: We aim to verify and patch critical vulnerabilities within 48 hours.
-- **Disclosure**: After the patch is released and users have had time to update, we will publish a security advisory.
+We rely on explicit, code-level pre-filters (during vector retrieval) and post-filters (before context assembly) to mitigate these threats, rather than relying on LLM behavior.
 
-## Threat Model & Design
+## Secure Coding Guidelines
 
-EnterpriseIQ is designed with a defense-in-depth approach. See [docs/security/threat-model.md](docs/security/threat-model.md) for a detailed overview of our security assumptions and architecture.
+When contributing to EnterpriseIQ, please adhere to the following:
+- **Never hardcode secrets.** Use environment variables or secure token generators (`secrets.token_hex`).
+- **Validate all inputs strictly** using Pydantic.
+- **Prevent timing attacks** by always using `secrets.compare_digest` with an explicit `None` check for secret string comparisons.
+- **Ensure error messages do not leak internal state or stack traces.** Use standard HTTP exception responses.
