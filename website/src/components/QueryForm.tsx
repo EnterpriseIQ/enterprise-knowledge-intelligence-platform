@@ -203,7 +203,7 @@ export const QueryForm = () => {
                   setQuery(h);
                   executeSearch(h);
                 }}
-                className="whitespace-nowrap text-xs px-2.5 py-1 rounded-md bg-white/[0.03] border border-white/5 text-white/60 hover:bg-white/10 hover:text-white transition-colors"
+                className="whitespace-nowrap text-xs px-2.5 py-1 rounded-md bg-white/[0.03] border border-white/5 text-white/60 hover:bg-white/10 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 {h}
               </button>
@@ -222,7 +222,7 @@ export const QueryForm = () => {
               setQuery(sq);
               executeSearch(sq);
             }}
-            className="text-xs px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white transition-colors"
+            className="text-xs px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             {sq}
           </button>
