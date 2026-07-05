@@ -1,25 +1,25 @@
-# These owners will be the default reviewers for pull requests in these areas.
+# Code Owners
 
-# Global owners
-*       @enterpriseiq/core-maintainers
+# These owners will be the default reviewers for pull requests.
 
-# Backend and API
-/src/api/       @enterpriseiq/backend
-/src/pipeline.py @enterpriseiq/backend
+# Default catch-all
+*       @enterpriseiq/core-team
+
+# Core Backend & Architecture
+/src/api/           @enterpriseiq/backend
+/src/pipeline.py    @enterpriseiq/architecture
+
+# Security & RBAC
+/src/security/      @enterpriseiq/security
+/data/rbac/         @enterpriseiq/security
+
+# Retrieval & Vector Store
+/src/retrieval/     @enterpriseiq/search
+/src/vectorstore/   @enterpriseiq/search
 
 # Frontend
-/website/       @enterpriseiq/frontend
-
-# Security and RBAC
-/src/security/  @enterpriseiq/security
-/data/rbac/     @enterpriseiq/security
-SECURITY.md     @enterpriseiq/security
+/website/           @enterpriseiq/frontend
 
 # Documentation
-/docs/          @enterpriseiq/docs
-README.md       @enterpriseiq/docs
-
-# CI/CD and Infrastructure
-/Dockerfile     @enterpriseiq/devops
-/.github/       @enterpriseiq/devops
-/docker-compose.yml @enterpriseiq/devops
+/docs/              @enterpriseiq/devrel
+/README.md          @enterpriseiq/devrel

@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#020617" />
+      <stop offset="100%" stop-color="#0F172A" />
+    </linearGradient>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#3B82F6" />
+    </linearGradient>
+    <style>
+      .text-title { font-family: 'Inter', system-ui, sans-serif; font-size: 22px; font-weight: 700; fill: #F8FAFC; }
+      .text-node { font-family: 'Inter', system-ui, sans-serif; font-size: 14px; font-weight: 600; fill: #F8FAFC; text-anchor: middle; }
+      .text-desc { font-family: 'Inter', system-ui, sans-serif; font-size: 12px; font-weight: 400; fill: #94A3B8; text-anchor: middle; }
+      .node { fill: #1E293B; stroke: #475569; stroke-width: 2; rx: 12; }
+      .node-active { fill: #1E293B; stroke: url(#glow); stroke-width: 2.5; rx: 12; }
+      .edge { fill: none; stroke: #334155; stroke-width: 3; }
+      .arrow { fill: #334155; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" class="arrow" />
+    </marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="url(#bg)" />
+  <text x="400" y="40" class="text-title" text-anchor="middle">Request Execution Pipeline</text>
+
+  <!-- Nodes -->
+  <rect x="50" y="100" width="140" height="60" class="node" />
+  <text x="120" y="130" class="text-node">User Query</text>
+  <text x="120" y="148" class="text-desc">POST /query</text>
+
+  <rect x="250" y="100" width="140" height="60" class="node-active" />
+  <text x="320" y="130" class="text-node">Query Router</text>
+  <text x="320" y="148" class="text-desc">Intent Classification</text>
+
+  <rect x="250" y="220" width="140" height="60" class="node" />
+  <text x="320" y="250" class="text-node">Pre-Filter RBAC</text>
+  <text x="320" y="268" class="text-desc">Department Check</text>
+
+  <rect x="450" y="220" width="140" height="60" class="node-active" />
+  <text x="520" y="250" class="text-node">Hybrid Retrieve</text>
+  <text x="520" y="268" class="text-desc">Min-Max Fusion</text>
+
+  <rect x="450" y="100" width="140" height="60" class="node" />
+  <text x="520" y="130" class="text-node">Post-Filter ACL</text>
+  <text x="520" y="148" class="text-desc">Explicit Allow/Deny</text>
+
+  <rect x="650" y="100" width="140" height="60" class="node-active" />
+  <text x="720" y="130" class="text-node">Generation</text>
+  <text x="720" y="148" class="text-desc">Extractive Cite</text>
+
+  <!-- Edges -->
+  <path d="M 190 130 L 240 130" class="edge" marker-end="url(#arrowhead)" />
+  <path d="M 320 160 L 320 210" class="edge" marker-end="url(#arrowhead)" />
+  <path d="M 390 250 L 440 250" class="edge" marker-end="url(#arrowhead)" />
+  <path d="M 520 220 L 520 170" class="edge" marker-end="url(#arrowhead)" />
+  <path d="M 590 130 L 640 130" class="edge" marker-end="url(#arrowhead)" />
+
+</svg>
