@@ -1,9 +1,10 @@
-import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
-from src.retrieval.reranker import Reranker, CrossEncoderReranker, BGEReranker
-from src.retrieval.rrf import reciprocal_rank_fusion
+import pytest
+
 from src.retrieval.bm25_retriever import BM25Retriever
+from src.retrieval.reranker import BGEReranker, CrossEncoderReranker, Reranker
+from src.retrieval.rrf import reciprocal_rank_fusion
 
 # ---------------- Reranker ----------------
 

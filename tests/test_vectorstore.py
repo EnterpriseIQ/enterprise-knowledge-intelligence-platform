@@ -1,5 +1,4 @@
-import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 from src.vectorstore.chroma_store import VectorStore, _cosine, _match_where
 
