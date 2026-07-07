@@ -156,16 +156,26 @@ export const QueryForm = () => {
   return (
     <div className="w-full h-full flex flex-col p-4 opacity-100 bg-[#0A0A0A] rounded-2xl relative">
       {/* Header */}
-      <div className="flex items-center gap-2 mb-4 border-b border-white/5 pb-4">
-        <div className="w-3 h-3 rounded-full bg-red-500" />
-        <div className="w-3 h-3 rounded-full bg-yellow-500" />
-        <div className="w-3 h-3 rounded-full bg-green-500" />
-        <div className="ml-4 text-xs font-mono text-muted-foreground flex items-center gap-2">
-          agent.execute(query="<span className="text-white">{query || '...'}</span>")
+      <div className="flex flex-col gap-3 mb-4 border-b border-white/5 pb-4">
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-red-500" />
+          <div className="w-3 h-3 rounded-full bg-yellow-500" />
+          <div className="w-3 h-3 rounded-full bg-green-500" />
+          <div className="ml-4 text-xs font-mono text-muted-foreground flex items-center gap-2">
+            agent.execute(query="<span className="text-white">{query || '...'}</span>")
+          </div>
+          <div className="ml-auto text-xs font-mono text-blue-400/70 flex items-center gap-1.5 bg-blue-500/10 px-2 py-1 rounded-md border border-blue-500/20">
+            <Sparkles className="w-3 h-3" />
+            Interactive Playground
+          </div>
         </div>
-        <div className="ml-auto text-xs font-mono text-blue-400/70 flex items-center gap-1.5 bg-blue-500/10 px-2 py-1 rounded-md border border-blue-500/20">
-          <Sparkles className="w-3 h-3" />
-          Interactive Playground
+
+        {/* Informational Banner */}
+        <div className="flex items-start gap-2 bg-blue-500/5 border border-blue-500/10 rounded-lg p-3 text-xs text-blue-200/70">
+          <ShieldCheck className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
+          <p className="leading-relaxed">
+            <strong>Why a backend?</strong> Unlike simple client-side tools, EnterpriseIQ runs a heavy enterprise RAG pipeline. It requires secure backend infrastructure to host gigabyte-sized vector databases, machine learning embedding models, and strict RBAC enforcement components that cannot safely or performantly run in a web browser. This playground connects to a simulated/live backend to demonstrate the experience.
+          </p>
         </div>
       </div>
 
