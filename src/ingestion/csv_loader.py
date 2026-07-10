@@ -22,7 +22,8 @@ def load_csv(path: Path, max_rows: int = 500) -> str:
         "",
         "Records:",
     ]
-    for _, row in df.head(max_rows).iterrows():
-        rendered = "; ".join(f"{col}={row[col]}" for col in df.columns)
+    columns = df.columns
+    for row in df.head(max_rows).to_dict("records"):
+        rendered = "; ".join(f"{col}={row[col]}" for col in columns)
         lines.append(f"- {rendered}")
     return "\n".join(lines)
