@@ -18,7 +18,7 @@ def test_vectorstore_memory_fallback():
         store.add(
             ids=["1", "2"],
             texts=["hello", "world long"],
-            metadatas=[{"dept": "HR"}, {"dept": "IT"}]
+            metadatas=[{"dept": "HR"}, {"dept": "IT"}],
         )
         assert store.count() == 2
 
