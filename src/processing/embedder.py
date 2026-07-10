@@ -53,7 +53,9 @@ class Embedder:
 
         if uncached_texts:
             if self._model is not None:
-                new_vecs = self._model.encode(uncached_texts, normalize_embeddings=True, show_progress_bar=False)
+                new_vecs = self._model.encode(
+                    uncached_texts, normalize_embeddings=True, show_progress_bar=False
+                )
                 new_vecs_list = [v.tolist() for v in new_vecs]
             else:
                 new_vecs_list = [self._hash_embed(t) for t in uncached_texts]

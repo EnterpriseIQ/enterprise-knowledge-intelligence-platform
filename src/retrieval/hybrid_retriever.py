@@ -182,7 +182,9 @@ class HybridRetriever:
         if self.reranker and self.reranker.is_available and results:
             texts_to_rerank = [r.text for r in results]
             rerank_scores = self.reranker.rerank(request.query, texts_to_rerank)
-            rerank_norm = _minmax({r.chunk_id: s for r, s in zip(results, rerank_scores, strict=True)})
+            rerank_norm = _minmax(
+                {r.chunk_id: s for r, s in zip(results, rerank_scores, strict=True)}
+            )
             for r in results:
                 # Blend reranker score and original fused score
                 # 0.7 reranker, 0.3 original

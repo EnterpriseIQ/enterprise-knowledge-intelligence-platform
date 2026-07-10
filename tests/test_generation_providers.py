@@ -16,13 +16,16 @@ def dummy_chunks():
         )
     ]
 
+
 # ---------------- OpenAI Provider ----------------
+
 
 def test_openai_initialization_no_key(monkeypatch):
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     provider = OpenAIProvider()
     assert provider.is_available() is False
     assert provider.generate("query", dummy_chunks(), "system") is None
+
 
 def test_openai_generate_success(monkeypatch):
     monkeypatch.setenv("OPENAI_API_KEY", "dummy-key")
@@ -43,6 +46,7 @@ def test_openai_generate_success(monkeypatch):
         response = provider.generate("query", dummy_chunks(), "system")
         assert response == "OpenAI response"
 
+
 def test_openai_generate_exception(monkeypatch):
     monkeypatch.setenv("OPENAI_API_KEY", "dummy-key")
     monkeypatch.delenv("LANGFUSE_PUBLIC_KEY", raising=False)
@@ -56,7 +60,9 @@ def test_openai_generate_exception(monkeypatch):
 
         assert provider.generate("query", dummy_chunks(), "system") is None
 
+
 # ---------------- Gemini Provider ----------------
+
 
 def test_gemini_initialization_no_key(monkeypatch):
     monkeypatch.delenv("GEMINI_API_KEY", raising=False)
@@ -64,10 +70,13 @@ def test_gemini_initialization_no_key(monkeypatch):
     assert provider.is_available() is False
     assert provider.generate("query", dummy_chunks(), "system") is None
 
+
 def test_gemini_generate_success(monkeypatch):
     monkeypatch.setenv("GEMINI_API_KEY", "dummy-key")
 
-    with patch.dict("sys.modules", {"google.genai": MagicMock(), "google.genai.types": MagicMock()}):
+    with patch.dict(
+        "sys.modules", {"google.genai": MagicMock(), "google.genai.types": MagicMock()}
+    ):
         provider = GeminiProvider()
 
         mock_client = MagicMock()
@@ -82,10 +91,13 @@ def test_gemini_generate_success(monkeypatch):
         response = provider.generate("query", dummy_chunks(), "system")
         assert response == "Gemini response"
 
+
 def test_gemini_generate_exception(monkeypatch):
     monkeypatch.setenv("GEMINI_API_KEY", "dummy-key")
 
-    with patch.dict("sys.modules", {"google.genai": MagicMock(), "google.genai.types": MagicMock()}):
+    with patch.dict(
+        "sys.modules", {"google.genai": MagicMock(), "google.genai.types": MagicMock()}
+    ):
         provider = GeminiProvider()
 
         mock_client = MagicMock()
@@ -96,7 +108,9 @@ def test_gemini_generate_exception(monkeypatch):
 
         assert provider.generate("query", dummy_chunks(), "system") is None
 
+
 # ---------------- Ollama Provider ----------------
+
 
 @patch("requests.post")
 def test_ollama_generate_success(mock_post):
@@ -109,6 +123,7 @@ def test_ollama_generate_success(mock_post):
 
     response = provider.generate("query", dummy_chunks(), "system")
     assert response == "Ollama response"
+
 
 @patch("requests.post")
 def test_ollama_generate_exception(mock_post):
